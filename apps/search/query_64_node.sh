@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -p debug
-#SBATCH -N 64 
+#SBATCH -N 8 
 #SBATCH -t 0:30:00
 #SBATCH --gres=craynetwork:2
 #SBATCH -L SCRATCH
@@ -26,8 +26,8 @@ NCLIENT=1
 let NSERVER=$N_NODE*2
 let TOTALPROC=$NCLIENT*$N_NODE
 
-SERVER=/global/homes/w/wzhang5/software/SoMeta/api/build/bin/pdc_server.exe
- CLOSE=/global/homes/w/wzhang5/software/SoMeta/api/build/bin/close_server
+SERVER=/global/homes/w/wzhang5/software/SoMeta/src/build/bin/pdc_indexed_server.exe
+CLOSE=/global/homes/w/wzhang5/software/SoMeta/src/build/bin/close_server
 IMPORT=/global/homes/w/wzhang5/software/SoMeta/apps/search/build/h5boss_import.exe
 SEARCH=/global/homes/w/wzhang5/software/SoMeta/apps/search/build/h5boss_query_random_indexed.exe
 
