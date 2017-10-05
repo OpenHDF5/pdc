@@ -19,7 +19,11 @@ else()
   set(ENABLE_MPI OFF CACHE BOOL "")
 endif()
 
-
+#------------------------------------------------------------------------------
+# Set src dir and test dir
+#------------------------------------------------------------------------------
+set(DART_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(DART_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 #------------------------------------------------------------------------------
 # Version information
@@ -100,7 +104,7 @@ if(NOT DART_EXTERNALLY_CONFIGURED)
       ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single Directory for all static libraries."
   )
 endif()
-set(DART_CMAKE_DIR "${DART_SOURCE_DIR}/CMake")
+set(DART_CMAKE_DIR "${DART_SOURCE_DIR}/src/CMake")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${DART_CMAKE_DIR})
 
 #------------------------------------------------------------------------------
@@ -193,7 +197,7 @@ endfunction()
 #-----------------------------------------------------------------------------
 # Source
 #-----------------------------------------------------------------------------
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils)
+add_subdirectory(${DART_SRC_DIR}/utils)
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/commons)
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/client)
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/server)

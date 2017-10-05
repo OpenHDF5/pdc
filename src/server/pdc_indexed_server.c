@@ -4097,7 +4097,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     is_restart_g = 0;
-    port = pdc_server_rank_g % 32 + 7000 ;
+    port = pdc_server_rank_g % 32 + 8000 ;
     /* printf("rank=%d, port=%d\n", pdc_server_rank_g,port); */
 
     // Set up tmp dir
