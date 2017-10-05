@@ -194,9 +194,9 @@ endfunction()
 # Source
 #-----------------------------------------------------------------------------
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/commons)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/client)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/server)
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/commons)
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/client)
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/server)
 
 #-----------------------------------------------------------------------------
 # Testing
