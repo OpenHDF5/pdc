@@ -1,0 +1,13 @@
+set(DART_SRCS
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_interface.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_error.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_malloc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_prop.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_cont.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_obj.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_dt_conv.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_client_connect.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_client_server_common.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/dart_dart.c
+  )
