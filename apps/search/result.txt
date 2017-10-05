@@ -1,0 +1,88 @@
+TagName_Equals , tag50000::            ,    2.5, Total,  54.45, Server,  50.06, Network,   4.39
+TagName_Prefix , tag50000*::           ,    2.5, Total,  55.34, Server,  47.23, Network,   8.11
+TagName_Suffix , *tag50000::           ,    2.5, Total,  51.97, Server,  44.98, Network,   7.00
+TagName_Infix  , *tag50000*::          ,    2.5, Total,  51.56, Server,  44.68, Network,   6.88
+TagValue_Prefix, tag50000:50000*:      ,    2.5, Total,  51.94, Server,  47.59, Network,   4.35
+TagValue_Suffix, tag50000:*50000:      ,    2.5, Total,  34.12, Server,  47.37, Network, -13.25
+TagValue_Infix , tag50000:*50000*:     ,    2.5, Total,  50.74, Server,  46.70, Network,   4.04
+Both_Equals    , tag50000:50000:       ,    2.5, Total,  47.93, Server,  42.29, Network,   5.64
+Both_Prefix    , *tag50000:*50000:     ,    2.5, Total,  56.67, Server,  52.69, Network,   3.98
+Both_Suffix    , tag50000*:50000*:     ,    2.5, Total,  56.61, Server,  52.55, Network,   4.06
+Both_Infix     , *tag50000*:*50000*:   ,    2.5, Total,  58.56, Server,  53.95, Network,   4.61
+TagName_Equals , tag100000::           ,    5.0, Total,  52.30, Server,  45.78, Network,   6.52
+TagName_Prefix , tag100000*::          ,    5.0, Total,  62.69, Server,  49.40, Network,  13.30
+TagName_Suffix , *tag100000::          ,    5.0, Total,  55.93, Server,  48.01, Network,   7.92
+TagName_Infix  , *tag100000*::         ,    5.0, Total,  54.38, Server,  48.00, Network,   6.38
+TagValue_Prefix, tag100000:100000*:    ,    5.0, Total,  57.17, Server,  51.03, Network,   6.14
+TagValue_Suffix, tag100000:*100000:    ,    5.0, Total,  55.78, Server,  50.63, Network,   5.15
+TagValue_Infix , tag100000:*100000*:   ,    5.0, Total,  56.95, Server,  50.15, Network,   6.80
+Both_Equals    , tag100000:100000:     ,    5.0, Total,  50.40, Server,  44.55, Network,   5.85
+Both_Prefix    , *tag100000:*100000:   ,    5.0, Total,  60.95, Server,  55.36, Network,   5.59
+Both_Suffix    , tag100000*:100000*:   ,    5.0, Total,  61.00, Server,  55.41, Network,   5.59
+Both_Infix     , *tag100000*:*100000*: ,    5.0, Total,  62.45, Server,  56.59, Network,   5.86
+TagName_Equals , tag150000::           ,    7.5, Total,  55.93, Server,  47.13, Network,   8.79
+TagName_Prefix , tag150000*::          ,    7.5, Total,  67.51, Server,  51.40, Network,  16.11
+TagName_Suffix , *tag150000::          ,    7.5, Total,  60.31, Server,  50.81, Network,   9.49
+TagName_Infix  , *tag150000*::         ,    7.5, Total,  58.14, Server,  50.33, Network,   7.81
+TagValue_Prefix, tag150000:150000*:    ,    7.5, Total,  62.95, Server,  53.18, Network,   9.78
+TagValue_Suffix, tag150000:*150000:    ,    7.5, Total,  44.24, Server,  53.46, Network,  -9.22
+TagValue_Infix , tag150000:*150000*:   ,    7.5, Total,  63.88, Server,  53.47, Network,  10.40
+Both_Equals    , tag150000:150000:     ,    7.5, Total,  59.81, Server,  47.72, Network,  12.09
+Both_Prefix    , *tag150000:*150000:   ,    7.5, Total,  67.89, Server,  59.21, Network,   8.68
+Both_Suffix    , tag150000*:150000*:   ,    7.5, Total,  67.73, Server,  58.88, Network,   8.85
+Both_Infix     , *tag150000*:*150000*: ,    7.5, Total,  71.75, Server,  60.13, Network,  11.62
+TagName_Equals , tag200000::           ,   10.0, Total,  60.01, Server,  48.61, Network,  11.41
+TagName_Prefix , tag200000*::          ,   10.0, Total,  71.40, Server,  53.28, Network,  18.12
+TagName_Suffix , *tag200000::          ,   10.0, Total,  67.02, Server,  52.96, Network,  14.06
+TagName_Infix  , *tag200000*::         ,   10.0, Total,  71.46, Server,  53.71, Network,  17.75
+TagValue_Prefix, tag200000:200000*:    ,   10.0, Total,  67.09, Server,  57.26, Network,   9.82
+TagValue_Suffix, tag200000:*200000:    ,   10.0, Total,  47.73, Server,  57.03, Network,  -9.30
+TagValue_Infix , tag200000:*200000*:   ,   10.0, Total,  67.13, Server,  57.26, Network,   9.87
+Both_Equals    , tag200000:200000:     ,   10.0, Total,  60.86, Server,  50.93, Network,   9.93
+Both_Prefix    , *tag200000:*200000:   ,   10.0, Total,  73.39, Server,  63.43, Network,   9.96
+Both_Suffix    , tag200000*:200000*:   ,   10.0, Total,  73.62, Server,  63.85, Network,   9.77
+Both_Infix     , *tag200000*:*200000*: ,   10.0, Total,  74.91, Server,  65.18, Network,   9.72
+TagName_Equals , tag250000::           ,   12.5, Total,  64.70, Server,  50.76, Network,  13.94
+TagName_Prefix , tag250000*::          ,   12.5, Total,  76.78, Server,  56.72, Network,  20.07
+TagName_Suffix , *tag250000::          ,   12.5, Total,  76.82, Server,  56.15, Network,  20.67
+TagName_Infix  , *tag250000*::         ,   12.5, Total,  73.10, Server,  56.93, Network,  16.17
+TagValue_Prefix, tag250000:250000*:    ,   12.5, Total,  75.55, Server,  62.62, Network,  12.94
+TagValue_Suffix, tag250000:*250000:    ,   12.5, Total,  69.64, Server,  60.40, Network,   9.24
+TagValue_Infix , tag250000:*250000*:   ,   12.5, Total,  73.92, Server,  60.63, Network,  13.29
+Both_Equals    , tag250000:250000:     ,   12.5, Total,  71.61, Server,  54.09, Network,  17.52
+Both_Prefix    , *tag250000:*250000:   ,   12.5, Total,  80.12, Server,  67.90, Network,  12.22
+Both_Suffix    , tag250000*:250000*:   ,   12.5, Total,  80.23, Server,  68.21, Network,  12.02
+Both_Infix     , *tag250000*:*250000*: ,   12.5, Total,  83.11, Server,  69.35, Network,  13.77
+TagName_Equals , tag300000::           ,   15.0, Total,  70.04, Server,  53.03, Network,  17.00
+TagName_Prefix , tag300000*::          ,   15.0, Total,  88.07, Server,  60.33, Network,  27.74
+TagName_Suffix , *tag300000::          ,   15.0, Total,  74.95, Server,  59.81, Network,  15.14
+TagName_Infix  , *tag300000*::         ,   15.0, Total,  75.52, Server,  60.74, Network,  14.78
+TagValue_Prefix, tag300000:300000*:    ,   15.0, Total,  80.11, Server,  65.06, Network,  15.05
+TagValue_Suffix, tag300000:*300000:    ,   15.0, Total,  61.40, Server,  65.02, Network,  -3.62
+TagValue_Infix , tag300000:*300000*:   ,   15.0, Total,  81.51, Server,  66.32, Network,  15.19
+Both_Equals    , tag300000:300000:     ,   15.0, Total,  73.00, Server,  57.58, Network,  15.42
+Both_Prefix    , *tag300000:*300000:   ,   15.0, Total,  87.10, Server,  72.31, Network,  14.79
+Both_Suffix    , tag300000*:300000*:   ,   15.0, Total,  87.99, Server,  72.78, Network,  15.22
+Both_Infix     , *tag300000*:*300000*: ,   15.0, Total,  88.76, Server,  73.84, Network,  14.92
+TagName_Equals , tag350000::           ,   17.5, Total,  75.10, Server,  55.67, Network,  19.42
+TagName_Prefix , tag350000*::          ,   17.5, Total,  98.51, Server,  65.85, Network,  32.66
+TagName_Suffix , *tag350000::          ,   17.5, Total,  92.68, Server,  63.82, Network,  28.86
+TagName_Infix  , *tag350000*::         ,   17.5, Total,  83.70, Server,  66.53, Network,  17.17
+TagValue_Prefix, tag350000:350000*:    ,   17.5, Total,  87.23, Server,  69.77, Network,  17.46
+TagValue_Suffix, tag350000:*350000:    ,   17.5, Total,  66.19, Server,  70.33, Network,  -4.14
+TagValue_Infix , tag350000:*350000*:   ,   17.5, Total,  87.73, Server,  69.86, Network,  17.88
+Both_Equals    , tag350000:350000:     ,   17.5, Total,  79.96, Server,  61.94, Network,  18.02
+Both_Prefix    , *tag350000:*350000:   ,   17.5, Total,  94.90, Server,  77.98, Network,  16.92
+Both_Suffix    , tag350000*:350000*:   ,   17.5, Total,  96.37, Server,  78.56, Network,  17.81
+Both_Infix     , *tag350000*:*350000*: ,   17.5, Total,  97.09, Server,  79.80, Network,  17.29
+TagName_Equals , tag400000::           ,   20.0, Total,  91.39, Server,  59.48, Network,  31.91
+TagName_Prefix , tag400000*::          ,   20.0, Total, 108.32, Server,  69.53, Network,  38.79
+TagName_Suffix , *tag400000::          ,   20.0, Total,  96.28, Server,  69.00, Network,  27.27
+TagName_Infix  , *tag400000*::         ,   20.0, Total,  90.70, Server,  70.12, Network,  20.58
+TagValue_Prefix, tag400000:400000*:    ,   20.0, Total,  95.80, Server,  75.23, Network,  20.57
+TagValue_Suffix, tag400000:*400000:    ,   20.0, Total,  76.03, Server,  75.17, Network,   0.86
+TagValue_Infix , tag400000:*400000*:   ,   20.0, Total,  95.58, Server,  75.31, Network,  20.28
+Both_Equals    , tag400000:400000:     ,   20.0, Total,  87.02, Server,  65.67, Network,  21.36
+Both_Prefix    , *tag400000:*400000:   ,   20.0, Total, 104.11, Server,  84.44, Network,  19.66
+Both_Suffix    , tag400000*:400000*:   ,   20.0, Total, 105.07, Server,  85.58, Network,  19.48
+Both_Infix     , *tag400000*:*400000*: ,   20.0, Total, 106.86, Server,  86.58, Network,  20.27

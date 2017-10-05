@@ -1,0 +1,159 @@
+ModuleCmd_Switch.c(179):ERROR:152: Module 'PrgEnv-intel' is currently not loaded
+ModuleCmd_Switch.c(179):ERROR:152: Module 'PrgEnv-intel' is currently not loaded
+Mon Jul 10 11:14:39 PDT 2017
+
+===========
+Init server
+===========
+==PDC_SERVER[0]: using ./pdc_tmp as tmp dir 
+
+==PDC_SERVER: using bmi+tcp
+==PDC_SERVER: without multi-thread!
+==PDC_SERVER: Server ready!
+
+
+============================
+0 Importing H5BOSS Metadata
+============================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Starting to import h5boss metadata...
+Time to create 2599000 obj with 2048 ranks: 26.013173
+
+===================
+0 Querying 26000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve      26000 metadata objects with 2048 ranks: 0.052536
+Time to update        26000 metadata objects with 2048 ranks: 0.013948
+Total time: 0.236856
+Time to query      25563 metadata objects with tag [    select26000]: 0.005461
+Tag search correctness check ... OK!
+
+===================
+0 Querying 52000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve      52000 metadata objects with 2048 ranks: 0.016669
+Time to update        52000 metadata objects with 2048 ranks: 0.011785
+Total time: 0.203056
+Time to query      52000 metadata objects with tag [    select52000]: 0.004912
+Tag search correctness check ... OK!
+
+===================
+0 Querying 104000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve     104000 metadata objects with 2048 ranks: 0.024442
+Time to update       104000 metadata objects with 2048 ranks: 0.022341
+Total time: 0.304491
+Time to query     103349 metadata objects with tag [   select104000]: 0.005875
+Tag search correctness check ... OK!
+
+===================
+0 Querying 208000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve     208000 metadata objects with 2048 ranks: 0.072065
+Time to update       208000 metadata objects with 2048 ranks: 0.066935
+Total time: 0.336646
+Time to query     207746 metadata objects with tag [   select208000]: 0.007442
+Tag search correctness check ... OK!
+
+===================
+0 Querying 416000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve     416000 metadata objects with 2048 ranks: 0.148343
+Time to update       416000 metadata objects with 2048 ranks: 0.134609
+Total time: 0.404700
+Time to query     416000 metadata objects with tag [   select416000]: 0.008482
+Tag search correctness check ... OK!
+
+===================
+0 Querying 832000
+===================
+Reading from /global/homes/w/wzhang5/software/SoMeta2/apps/h5boss/pm_list.txt
+Finished bcast pm arrays
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 2048 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata servers
+
+
+Finished initialization...
+Finished search and add tag
+Time to retrieve     832000 metadata objects with 2048 ranks: 0.220109
+Time to update       832000 metadata objects with 2048 ranks: 0.212568
+Total time: 0.726280
+Time to query     832000 metadata objects with tag [   select832000]: 0.009919
+Tag search correctness check ... OK!
+====================
+Close and Checkpoint
+====================
+==PDC_CLIENT[0]: using ./pdc_tmp as tmp dir 
+==PDC_CLIENT: Found 128 PDC Metadata servers, running with 1 PDC clients
+==PDC_CLIENT: using bmi+tcp
+==PDC_CLIENT: Successfully established connection to 128 PDC metadata server
+
+
+
+
+
+==PDC_CLIENT: All server closed
+
+
+==PDC_SERVER: Start checkpoint process [./pdc_tmp/metadata_checkpoint.0]
+==PDC_SERVER: checkpointed 2599000 objects
+==PDC_SERVER: exiting...
+Mon Jul 10 11:20:34 PDT 2017

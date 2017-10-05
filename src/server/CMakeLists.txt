@@ -11,10 +11,18 @@ include_directories(
 
 add_definitions( -DIS_PDC_SERVER=1 )
 
-add_executable(pdc_server.exe 
-               pdc_server.c 
-               ../api/pdc_client_server_common.c 
-               dablooms/dablooms.c 
-               dablooms/murmur.c 
+add_executable(pdc_server.exe
+               pdc_server.c
+               ../api/pdc_client_server_common.c
+               dablooms/dablooms.c
+               dablooms/murmur.c
 )
-target_link_libraries(pdc_server.exe mercury -lm -ldl)
+target_link_libraries(pdc_server.exe mercury pdc_utils -lm -ldl)
+
+add_executable(pdc_indexed_server.exe
+               pdc_indexed_server.c
+               ../api/pdc_client_server_common.c
+               dablooms/dablooms.c
+               dablooms/murmur.c
+)
+target_link_libraries(pdc_indexed_server.exe mercury pdc_utils -lm -ldl)

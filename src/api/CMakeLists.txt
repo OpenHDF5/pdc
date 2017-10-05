@@ -3,6 +3,7 @@
 #------------------------------------------------------------------------------
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -53,19 +54,33 @@ set(PDC_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_dt_conv.c
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_client_connect.c
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_client_server_common.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/pdc_dart.c
   )
+
+set(PDC_UTILS_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/string_utils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/query_utils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/timer_utils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/hashset.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/vector.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/art.c
+    )
 
 #  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/server)
 
 #------------------------------------------------------------------------------
 # Libraries
 #------------------------------------------------------------------------------
+# PDC_UTILS
+add_library(pdc_utils ${PDC_UTILS_SRC})
+pdc_set_lib_options(pdc_utils "pdc_utils" ${PDC_LIBTYPE})
+
 # PDC
 add_library(pdc ${PDC_SRCS})
-target_link_libraries(pdc ${PDC_EXPORTED_LIBS} ${PDC_EXT_LIB_DEPENDENCIES})
+target_link_libraries(pdc pdc_utils ${PDC_EXPORTED_LIBS} ${PDC_EXT_LIB_DEPENDENCIES})
 pdc_set_lib_options(pdc "pdc" ${PDC_LIBTYPE})
 
-set(PDC_EXPORTED_LIBS pdc ${PDC_EXPORTED_LIBS})
+set(PDC_EXPORTED_LIBS pdc pdc_utils ${PDC_EXPORTED_LIBS})
 
 #-----------------------------------------------------------------------------
 # Specify project header files to be installed
@@ -87,11 +102,29 @@ set(PDC_HEADERS
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_dt_conv.h
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_client_connect.h
   ${CMAKE_CURRENT_SOURCE_DIR}/pdc_client_server_common.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/pdc_dart.h
   )
-
+set(PDC_UTILS_HEADERS
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/string_utils.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/query_utils.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/timer_utils.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/vector.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/hashset.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils/art.h
+)
 #-----------------------------------------------------------------------------
 # Add file(s) to CMake Install
 #-----------------------------------------------------------------------------
+
+install(
+  FILES
+    ${PDC_UTILS_HEADERS}
+  DESTINATION
+    ${PDC_INSTALL_INCLUDE_DIR}
+  COMPONENT
+    headers
+)
+
 install(
   FILES
     ${PDC_HEADERS}
@@ -113,6 +146,17 @@ install(
 #-----------------------------------------------------------------------------
 # Add Target(s) to CMake Install
 #-----------------------------------------------------------------------------
+
+install(
+  TARGETS
+    pdc_utils
+  EXPORT
+    ${PDC_EXPORTED_TARGETS}
+  LIBRARY DESTINATION ${PDC_INSTALL_LIB_DIR}
+  ARCHIVE DESTINATION ${PDC_INSTALL_LIB_DIR}
+  RUNTIME DESTINATION ${PDC_INSTALL_BIN_DIR}
+)
+
 install(
   TARGETS
     pdc
@@ -153,6 +197,7 @@ endif()
 # Used by config.cmake.build.in and Testing
 set(PDC_INCLUDES_BUILD_TIME
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/utils
   ${CMAKE_CURRENT_BINARY_DIR}
   ${PDC_EXT_INCLUDE_DEPENDENCIES}
   PARENT_SCOPE

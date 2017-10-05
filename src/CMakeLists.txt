@@ -310,6 +310,10 @@ configure_file(
   ${PDC_SOURCE_DIR}/CMake/pdc-config.cmake.build.in
   ${PDC_BINARY_DIR}/pdc-config.cmake @ONLY
 )
+configure_file(
+  ${PDC_SOURCE_DIR}/CMake/pdc_utils-config.cmake.build.in
+  ${PDC_BINARY_DIR}/pdc_utils-config.cmake @ONLY
+)
 
 #-----------------------------------------------------------------------------
 # Configure the config.cmake file for the install directory
@@ -318,10 +322,15 @@ configure_file(
   ${PDC_SOURCE_DIR}/CMake/pdc-config.cmake.install.in
   ${PDC_BINARY_DIR}/CMakeFiles/pdc-config.cmake @ONLY
 )
+configure_file(
+  ${PDC_SOURCE_DIR}/CMake/pdc_utils-config.cmake.install.in
+  ${PDC_BINARY_DIR}/CMakeFiles/pdc_utils-config.cmake @ONLY
+)
 
 install(
   FILES
     ${PDC_BINARY_DIR}/CMakeFiles/pdc-config.cmake
+    ${PDC_BINARY_DIR}/CMakeFiles/pdc_utils-config.cmake
   DESTINATION
     ${PDC_INSTALL_DATA_DIR}/cmake/pdc
 )
@@ -333,10 +342,15 @@ configure_file(
   ${PDC_SOURCE_DIR}/CMake/pdc-config-version.cmake.in
   ${PDC_BINARY_DIR}/CMakeFiles/pdc-config-version.cmake @ONLY
 )
+configure_file(
+  ${PDC_SOURCE_DIR}/CMake/pdc_utils-config-version.cmake.in
+  ${PDC_BINARY_DIR}/CMakeFiles/pdc_utils-config-version.cmake @ONLY
+)
 
 install(
   FILES
     ${PDC_BINARY_DIR}/CMakeFiles/pdc-config-version.cmake
+    ${PDC_BINARY_DIR}/CMakeFiles/pdc_utils-config-version.cmake
   DESTINATION
     ${PDC_INSTALL_DATA_DIR}/cmake/pdc
 )
