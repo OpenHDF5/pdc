@@ -6,7 +6,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define ENABLE_MPI 1
+/* #define ENABLE_MPI 1 */
 
 #ifdef ENABLE_MPI
 #include "mpi.h"
@@ -15,7 +15,7 @@
 #include "pdc.h"
 #include "pdc_client_server_common.h"
 #include "pdc_client_connect.h"
-#include "timer_utils.h"
+
 
 void print_usage() {
     printf("Usage: srun -n ./h5boss_query_random /path/to/pm_list.txt n_query\n");
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         count = i;
     }
 
-
+    
 
     my_query  = n_query;
     my_count  = count;
@@ -97,11 +97,11 @@ int main(int argc, char **argv)
     /* int *displs = (int*)malloc(sizeof(int)* size); */
     /* for (i = 0; i < size; i++) { */
     /*     sendcount[i] = count / size; */
-    /*     if (i == size - 1) */
+    /*     if (i == size - 1) */ 
     /*         sendcount[i] += count % size; */
     /*     displs[i] = i * (count / size); */
     /* } */
-
+    
     MPI_Bcast( &plate, count, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast( &mjd  , count, MPI_INT, 0, MPI_COMM_WORLD);
     /* MPI_Scatterv(plate, sendcount, displs, MPI_INT, my_plate, my_count, MPI_INT, 0, MPI_COMM_WORLD); */
@@ -114,19 +114,18 @@ int main(int argc, char **argv)
     if (rank == 0) {
         printf("Finished bcast pm arrays\n");
     }
-#endif
+#endif 
 
     /* printf("%d: myquery = %d\n", rank, my_query); */
 
 
-    struct PDC_prop p;
-    pdcid_t pdc = PDC_init(p);
+    pdcid_t pdc = PDC_init("pdc");
 
     pdcid_t cont_prop = PDCprop_create(PDC_CONT_CREATE, pdc);
     if(cont_prop <= 0)
         printf("Fail to create container property @ line  %d!\n", __LINE__);
 
-    pdcid_t cont = PDCcont_create(pdc, "c1", cont_prop);
+    pdcid_t cont = PDCcont_create("c1", cont_prop);
     if(cont <= 0)
         printf("Fail to create container @ line  %d!\n", __LINE__);
 
@@ -137,7 +136,7 @@ int main(int argc, char **argv)
     char data_loc[128];
     char obj_name[128];
     uint64_t dims[2] = {1000, 2};
-    PDCprop_set_obj_dims(obj_prop, 2, dims, pdc);
+    PDCprop_set_obj_dims(obj_prop, 2, dims);
 
     pdcid_t test_obj = -1;
 
@@ -178,8 +177,8 @@ int main(int argc, char **argv)
     a.data_location[0]     = 0;
 
     sprintf(&a.app_name[0], "%s", "New App Name");
-    sprintf(&a.tags[0], "tag%d=%d", n_query, n_query);
-    sprintf(&new_tag[0], "tag%d=%d", n_query, n_query);
+    sprintf(&a.tags[0], "select%d", n_query);
+    sprintf(&new_tag[0], "select%d", n_query);
 
     gettimeofday(&ht_total_start, 0);
 
@@ -187,7 +186,7 @@ int main(int argc, char **argv)
     int pm_idx = (count / size ) * rank;
     int fiber_idx = 1;
     int my_actual_query_cnt = 0, total_actual_query_cnt;
-    /* =============== E-SEARCH BEGINS ================= */
+
     for (i = 0; i < my_query; i++) {
 
             sprintf(obj_name, "%d-%d-%d", plate_ptr[pm_idx], mjd_ptr[pm_idx], fiber_idx);
@@ -204,15 +203,13 @@ int main(int argc, char **argv)
             }
             /* printf("%d: querying %s\n", rank, obj_name); */
 
-
             gettimeofday(&ht_query_start, 0);
 
             // Retrieve metdata object with name
             PDC_Client_query_metadata_name_timestep(obj_name, 0, &res);
 
-
             gettimeofday(&ht_query_end, 0);
-            ht_query_sec += ( (ht_query_end.tv_sec-ht_query_start.tv_sec)*1000000LL +
+            ht_query_sec += ( (ht_query_end.tv_sec-ht_query_start.tv_sec)*1000000LL + 
                               ht_query_end.tv_usec-ht_query_start.tv_usec ) / 1000000.0;
 
             if (res == NULL) {
@@ -225,8 +222,6 @@ int main(int argc, char **argv)
 
             my_actual_query_cnt++;
 
-
-
             gettimeofday(&ht_update_start, 0);
 
             // Update retrieved metadata
@@ -236,9 +231,8 @@ int main(int argc, char **argv)
             /* PDC_Client_update_metadata(res, &a); */
             PDC_Client_add_tag(res, new_tag);
 
-
             gettimeofday(&ht_update_end, 0);
-            ht_update_sec += ( (ht_update_end.tv_sec-ht_update_start.tv_sec)*1000000LL +
+            ht_update_sec += ( (ht_update_end.tv_sec-ht_update_start.tv_sec)*1000000LL + 
                               ht_update_end.tv_usec-ht_update_start.tv_usec ) / 1000000.0;
 
             // Query update metadata and print
@@ -289,87 +283,62 @@ int main(int argc, char **argv)
     }
 
 
-/* =============== E-SEARCH ENDS ================= */
-
-
-/* *****************  PARTIAL QUERY STARTS **********************  */
-
-    int n_res, total_n_res, n_round;
-    char p_query[11][80];
-
-    sprintf(p_query[0], "tag%d:", n_query, n_query);//has tag
-    sprintf(p_query[1], "tag%d*:", n_query, n_query);//tag prefix match
-    sprintf(p_query[2], "*tag%d:", n_query, n_query);//tag suffix match
-    sprintf(p_query[3], "*tag%d*:", n_query, n_query);//tag infix match
-    sprintf(p_query[4], "tag%d:%d*", n_query, n_query);//tag value matches prefix
-    sprintf(p_query[5], "tag%d:*%d", n_query, n_query);//tag value matches suffix
-    sprintf(p_query[6], "tag%d:*%d*", n_query, n_query);//tag value matches infix
-    sprintf(p_query[7], "tag%d:%d", n_query, n_query);//tag name and value equal
-    sprintf(p_query[8], "tag%d*:%d*", n_query, n_query);//tag name and value match prefix
-    sprintf(p_query[9], "*tag%d:*%d", n_query, n_query);//tag name and value match suffix
-    sprintf(p_query[10], "*tag%d*:*%d*", n_query, n_query);//tag name and value match infix
-
+    int n_res, total_n_res;
     pdc_metadata_t **res_arr;
-
-
-    for (n_round = 0; n_round < 1; n_round++) {
+    pdc_metadata_t **res_arr1;
 
 #ifdef ENABLE_MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
-        //ht_query_tag_sec=0.0;
-        gettimeofday(&ht_query_tag_start, 0);
-
-        /* *****************  PARTIAL QUERY SUBMITTED **********************  */
-        PDC_partial_query(0 , -1, NULL, NULL, -1, -1, -1, p_query[n_round], &n_res, &res_arr);
+    gettimeofday(&ht_query_tag_start, 0);
 
 
+    PDC_partial_query(0 , -1, NULL, NULL, -1, -1, -1, new_tag, &n_res, &res_arr);
+
+    PDC_partial_query(0 , -1, NULL, NULL, -1, -1, -1, new_tag, &n_res, &res_arr1);
+
+    gettimeofday(&ht_query_tag_end, 0);
 #ifdef ENABLE_MPI
-        MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
 #endif
-        gettimeofday(&ht_query_tag_end, 0);
-
-        ht_query_tag_sec = ( (ht_query_tag_end.tv_sec-ht_query_tag_start.tv_sec)*1000000LL +
+    ht_query_tag_sec += ( (ht_query_tag_end.tv_sec-ht_query_tag_start.tv_sec)*1000000LL + 
                       ht_query_tag_end.tv_usec-ht_query_tag_start.tv_usec ) / 1000000.0;
-
 #ifdef ENABLE_MPI
-        /* printf("%d: Received %5d metadata objects with tag: %s\n", rank, n_res, a.tags); */
-        MPI_Reduce(&n_res, &total_n_res, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    /* printf("%d: Received %5d metadata objects with tag: %s\n", rank, n_res, a.tags); */
+    MPI_Reduce(&n_res, &total_n_res, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    if (rank == 0) {
+        printf("Time to query %10d metadata objects with tag [%15s]: %.6f\n", total_n_res, new_tag, ht_query_tag_sec);
+    }
+#else
+    printf("Time to query %10d metadata objects with tag [%15s]: %.6f\n", n_res, new_tag, ht_query_tag_sec);
+#endif
+
+
+    // Check correctness (queried results should contain the tag specified)
+    int is_tag_check_ok = 1;
+    for (i = 0; i < n_res; i++) {
+        if (strstr(res_arr[i]->tags, new_tag) == NULL) {
+            printf("Error with queried results:\n");
+            PDC_print_metadata(res_arr[i]);
+            is_tag_check_ok = -1;
+        }
+            /* PDC_print_metadata(res_arr[i]); */
+    }
+    if (is_tag_check_ok == 1) {
         if (rank == 0) {
-#endif
-            printf("Time to query %10d metadata objects with tag [%15s]: %.6f\n", total_n_res, p_query[n_round], ht_query_tag_sec);
-#ifdef ENABLE_MPI
+            printf("Tag search correctness check ... OK!\n");
         }
-#endif
-
-
-        // Check correctness (queried results should contain the tag specified)
-        int is_tag_check_ok = 1;
-        // Currently skip correctness check.
-        // for (i = 0; i < n_res; i++) {
-        //     if (strstr(res_arr[i]->tags, new_tag) == NULL) {
-        //         printf("Error with queried results:\n");
-        //         PDC_print_metadata(res_arr[i]);
-        //         is_tag_check_ok = -1;
-        //     }
-        //         /* PDC_print_metadata(res_arr[i]); */
-        // }
-        if (is_tag_check_ok == 1) {
-            if (rank == 0) {
-                printf("Tag search correctness check ... OK!\n");
-            }
-        }
+    }
 
         /* for (i = 0; i < n_res; i++) { */
         /*     PDC_print_metadata(res_arr[i]); */
         /* } */
-        /* *****************  PARTIAL QUERY ENDS **********************  */
-    }
+
 done:
-    if(PDCcont_close(cont, pdc) < 0)
+    if(PDCcont_close(cont) < 0)
         printf("fail to close container %lld\n", cont);
 
-    if(PDCprop_close(cont_prop, pdc) < 0)
+    if(PDCprop_close(cont_prop) < 0)
         printf("Fail to close property @ line %d\n", __LINE__);
 
     if(PDC_close(pdc) < 0)
