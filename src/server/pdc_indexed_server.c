@@ -56,15 +56,14 @@
 #include "pdc_client_server_common.h"
 #include "pdc_server.h"
 
+#include "query_utils.h"
+#include "timer_utils.h"
+
 #ifdef ENABLE_MULTITHREAD
 // Mercury multithread
 #include "mercury_thread.h"
 #include "mercury_thread_pool.h"
 #include "mercury_thread_mutex.h"
-
-#include "query_utils.h"
-#include "timer_utils.h"
-
 
 
 hg_thread_mutex_t pdc_client_addr_metex_g;
