@@ -1,19 +1,19 @@
 /*
- * Copyright Notice for 
+ * Copyright Notice for
  * Proactive Data Containers (PDC) Software Library and Utilities
  * -----------------------------------------------------------------------------
 
  *** Copyright Notice ***
- 
+
  * Proactive Data Containers (PDC) Copyright (c) 2017, The Regents of the
  * University of California, through Lawrence Berkeley National Laboratory,
  * UChicago Argonne, LLC, operator of Argonne National Laboratory, and The HDF
  * Group (subject to receipt of any required approvals from the U.S. Dept. of
  * Energy).  All rights reserved.
- 
+
  * If you have questions about your rights to use or distribute this software,
  * please contact Berkeley Lab's Innovation & Partnerships Office at  IPO@lbl.gov.
- 
+
  * NOTICE.  This Software was developed under funding from the U.S. Department of
  * Energy and the U.S. Government consequently retains certain rights. As such, the
  * U.S. Government has been granted for itself and others acting on its behalf a
@@ -97,10 +97,10 @@ perr_t PDC_get_self_addr(hg_class_t* hg_class, char* self_addr_string)
     perr_t ret_value;
     hg_addr_t self_addr;
     hg_size_t self_addr_string_size = ADDR_MAX;
-    
+
     FUNC_ENTER(NULL);
- 
-    // Get self addr to tell client about 
+
+    // Get self addr to tell client about
     HG_Addr_self(hg_class, &self_addr);
     HG_Addr_to_string(hg_class, self_addr_string, &self_addr_string_size, self_addr);
     HG_Addr_free(hg_class, self_addr);
@@ -115,9 +115,9 @@ uint32_t PDC_get_server_by_obj_id(uint64_t obj_id, int n_server)
 {
     // TODO: need a smart way to deal with server number change
     uint32_t ret_value;
-    
+
     FUNC_ENTER(NULL);
-    
+
     ret_value  = (uint32_t)(obj_id / PDC_SERVER_ID_INTERVEL) - 1;
     ret_value %= n_server;
 
@@ -127,9 +127,9 @@ uint32_t PDC_get_server_by_obj_id(uint64_t obj_id, int n_server)
 static uint32_t pdc_hash_djb2(const char *pc)
 {
     uint32_t hash = 5381, c;
-    
+
     FUNC_ENTER(NULL);
-    
+
     while (c = *pc++)
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
     if (hash < 0)
@@ -142,9 +142,9 @@ static uint32_t pdc_hash_djb2(const char *pc)
 static uint32_t pdc_hash_sdbm(const char *pc)
 {
     uint32_t hash = 0, c;
-    
+
     FUNC_ENTER(NULL);
-    
+
     while (c = (*pc++))
         hash = c + (hash << 6) + (hash << 16) - hash;
     if (hash < 0)
@@ -155,27 +155,27 @@ static uint32_t pdc_hash_sdbm(const char *pc)
 
 uint32_t PDC_get_hash_by_name(const char *name)
 {
-    return pdc_hash_djb2(name); 
+    return pdc_hash_djb2(name);
 }
 
 inline int PDC_metadata_cmp(pdc_metadata_t *a, pdc_metadata_t *b)
 {
     int ret = 0;
-    
+
     FUNC_ENTER(NULL);
-    
+
     // Timestep
     if (a->time_step >= 0 && b->time_step >= 0) {
         ret = (a->time_step - b->time_step);
-        /* if (ret != 0) */ 
+        /* if (ret != 0) */
         /*     printf("==PDC_SERVER: timestep not equal\n"); */
     }
     if (ret != 0 ) return ret;
 
     // Object name
     if (a->obj_name[0] != '\0' && b->obj_name[0] != '\0') {
-        ret = strcmp(a->obj_name, b->obj_name); 
-        /* if (ret != 0) */ 
+        ret = strcmp(a->obj_name, b->obj_name);
+        /* if (ret != 0) */
         /*     printf("==PDC_SERVER: obj_name not equal\n"); */
     }
     if (ret != 0 ) return ret;
@@ -183,22 +183,22 @@ inline int PDC_metadata_cmp(pdc_metadata_t *a, pdc_metadata_t *b)
     // UID
     if (a->user_id > 0 && b->user_id > 0) {
         ret = (a->user_id - b->user_id);
-        /* if (ret != 0) */ 
+        /* if (ret != 0) */
         /*     printf("==PDC_SERVER: uid not equal\n"); */
     }
     if (ret != 0 ) return ret;
 
-    // Application name 
+    // Application name
     if (a->app_name[0] != '\0' && b->app_name[0] != '\0') {
         ret = strcmp(a->app_name, b->app_name);
-        /* if (ret != 0) */ 
+        /* if (ret != 0) */
         /*     printf("==PDC_SERVER: app_name not equal\n"); */
     }
 
     return ret;
 }
 
-void pdc_mkdir(const char *dir) 
+void pdc_mkdir(const char *dir)
 {
     char tmp[ADDR_MAX];
     char *p = NULL;
@@ -222,7 +222,7 @@ void PDC_print_metadata(pdc_metadata_t *a)
     int i;
     region_list_t *elt;
     FUNC_ENTER(NULL);
-    
+
     if (a == NULL) {
         printf("==Empty metadata structure\n");
         return;
@@ -237,7 +237,7 @@ void PDC_print_metadata(pdc_metadata_t *a)
     printf("  tags      = [%s]\n",   a->tags);
     printf("  ndim      = %d\n",   a->ndim);
     printf("  dims = %llu",   a->dims[0]);
-    for (i = 1; i < a->ndim; i++) 
+    for (i = 1; i < a->ndim; i++)
         printf(", %llu",   a->dims[i]);
     // print regiono info
     DL_FOREACH(a->storage_region_list_head, elt)
@@ -310,12 +310,12 @@ int PDC_is_same_region_list(region_list_t *a, region_list_t *b)
     int ret_value = 1;
     int i = 0;
 
-    if (a->ndim != b->ndim) 
+    if (a->ndim != b->ndim)
         return -1;
 
     for (i = 0; i < a->ndim; i++) {
 
-        if (a->start[i] != b->start[i]) 
+        if (a->start[i] != b->start[i])
             return -1;
 
         if (a->count[i] != b->count[i])
@@ -329,7 +329,7 @@ done:
 void PDC_print_storage_region_list(region_list_t *a)
 {
     FUNC_ENTER(NULL);
-    
+
     if (a == NULL) {
         printf("==Empty region_list_t structure\n");
         return;
@@ -346,7 +346,7 @@ void PDC_print_storage_region_list(region_list_t *a)
     printf("    path: %s\n", a->storage_location);
     printf("   dirty: %d\n", a->reg_dirty);
     printf("  offset: %" PRIu64 "\n", a->offset);
-   
+
     printf("================================\n\n");
     fflush(stdout);
 }
@@ -355,7 +355,7 @@ void PDC_print_storage_region_list(region_list_t *a)
 void PDC_print_region_list(region_list_t *a)
 {
     FUNC_ENTER(NULL);
-    
+
     if (a == NULL) {
         printf("==Empty region_list_t structure\n");
         return;
@@ -375,7 +375,7 @@ void PDC_print_region_list(region_list_t *a)
     while (1) {
         printf("%u, ", a->client_ids[i]);
         i++;
-        if (a->client_ids[i] == 0 ) 
+        if (a->client_ids[i] == 0 )
             break;
     }
     printf("\n  =================\n");
@@ -397,7 +397,7 @@ perr_t pdc_region_list_t_deep_cp(region_list_t *from, region_list_t *to)
         /* to->stride[i] = from->stride[i]; */
     }
 
-    for (i = 0; i < PDC_SERVER_MAX_PROC_PER_NODE; i++) 
+    for (i = 0; i < PDC_SERVER_MAX_PROC_PER_NODE; i++)
         to->client_ids[i] = from->client_ids[i];
 
     to->data_size     = from->data_size;
@@ -415,7 +415,7 @@ perr_t pdc_region_list_t_deep_cp(region_list_t *from, region_list_t *to)
     to->next = NULL;
 
     // Copy 16 attributes, double check to match the region_list_t def
-                            
+
     return SUCCEED;
 }
 
@@ -475,7 +475,7 @@ perr_t pdc_region_info_to_list_t(struct PDC_region_info *region, region_list_t *
         list->count[i]  = region->size[i];
         /* list->stride[i] = 0; */
     }
-    
+
     return SUCCEED;
 }
 
@@ -492,7 +492,7 @@ perr_t pdc_region_info_t_to_transfer(struct PDC_region_info *region, region_info
         printf("pdc_region_info_t_to_transfer() unsupported dim: %lu\n", ndim);
         return FAIL;
     }
-    
+
     transfer->ndim = ndim;
     if (ndim >= 1)      transfer->start_0  = region->offset[0];
     else                transfer->start_0  = 0;
@@ -609,6 +609,8 @@ perr_t pdc_transfer_t_to_metadata_t(pdc_metadata_transfer_t *transfer, pdc_metad
 
 #ifndef IS_PDC_SERVER
 // Dummy function for client to compile, real function is used only by server and code is in pdc_server.c
+perr_t PDC_Server_metadata_index_create(metadata_index_create_in_t *in, metadata_index_create_out_t *out){return SUCCEED;}
+
 hg_return_t PDC_Server_get_client_addr(const struct hg_cb_info *callback_info) {return SUCCEED;}
 perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out) {return SUCCEED;}
 /* perr_t insert_obj_name_marker(send_obj_name_marker_in_t *in, send_obj_name_marker_out_t *out) {return SUCCEED;} */
@@ -635,7 +637,7 @@ pdc_metadata_t *PDC_Server_get_obj_metadata(pdcid_t obj_id) {return NULL;}
 
 hg_class_t *hg_class_g;
 
-/* 
+/*
  * Data server related
  */
 hg_return_t PDC_Server_data_io_via_shm(const struct hg_cb_info *callback_info) {return HG_SUCCESS;}
@@ -647,6 +649,32 @@ hg_return_t PDC_Client_work_done_cb(const struct hg_cb_info *callback_info) {ret
 hg_return_t PDC_Client_get_data_from_server_shm_cb(const struct hg_cb_info *callback_info) {return HG_SUCCESS;};
 
 #endif
+
+
+/* static hg_return_t */
+// metadata_index_create_cb(hg_handle_t handle)
+HG_TEST_RPC_CB(metadata_index_create, handle)
+{
+    hg_return_t ret = HG_SUCCESS;
+    metadata_index_create_in_t in;
+    metadata_index_create_out_t out;
+
+    FUNC_ENTER(NULL);
+    // Extract input from handle
+    HG_Get_input(handle, &in);
+    // Create local index on server side
+    PDC_Server_metadata_index_create(&in, &out);
+
+    // Send response to client
+    HG_Respond(handle, NULL, NULL, &out);
+    /* printf("==PDC_SERVER: metadata_index_create_cb(): returned %llu\n", out.ret); */
+    // Free input
+    HG_Free_input(handle, &in);
+    // Free handle
+    HG_Destroy(handle);
+
+    return ret;
+}
 
 
 /*
@@ -662,7 +690,7 @@ hg_return_t PDC_Client_get_data_from_server_shm_cb(const struct hg_cb_info *call
 HG_TEST_RPC_CB(gen_obj_id, handle)
 {
     perr_t ret_value = SUCCEED;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -692,7 +720,7 @@ HG_TEST_RPC_CB(server_lookup_client, handle)
     hg_return_t ret_value = HG_SUCCESS;
     server_lookup_client_in_t  in;
     server_lookup_client_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -718,7 +746,7 @@ HG_TEST_RPC_CB(server_lookup_remote_server, handle)
     hg_return_t ret_value = HG_SUCCESS;
     server_lookup_remote_server_in_t  in;
     server_lookup_remote_server_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -743,7 +771,7 @@ HG_TEST_RPC_CB(client_test_connect, handle)
     client_test_connect_in_t  in;
     client_test_connect_out_t out;
     client_test_connect_args *args = (client_test_connect_args*)calloc(1, sizeof(client_test_connect_args));
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -780,7 +808,7 @@ HG_TEST_RPC_CB(client_test_connect, handle)
 /*     send_obj_name_marker_out_t out; */
 
 /*     HG_Get_input(handle, &in); */
-    
+
 /*     // Insert to object marker hash table */
 /*     insert_obj_name_marker(&in, &out); */
 
@@ -807,7 +835,7 @@ HG_TEST_RPC_CB(metadata_query, handle)
     metadata_query_in_t  in;
     metadata_query_out_t out;
     pdc_metadata_t *query_result = NULL;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -828,7 +856,7 @@ HG_TEST_RPC_CB(metadata_query, handle)
         /* out.ret.obj_name       = query_result->obj_name; */
         /* out.ret.app_name       = query_result->app_name; */
         /* out.ret.tags           = query_result->tags; */
-        /* out.ret.data_location  = query_result->data_location; */ 
+        /* out.ret.data_location  = query_result->data_location; */
     }
     else {
         out.ret.user_id        = -1;
@@ -837,7 +865,7 @@ HG_TEST_RPC_CB(metadata_query, handle)
         out.ret.obj_name       = "N/A";
         out.ret.app_name       = "N/A";
         out.ret.tags           = "N/A";
-        out.ret.data_location  = "N/A"; 
+        out.ret.data_location  = "N/A";
     }
 
     /* printf("out.ret.data_location: %s\n", out.ret.data_location); */
@@ -859,7 +887,7 @@ HG_TEST_RPC_CB(metadata_delete_by_id, handle)
     hg_return_t ret_value = HG_SUCCESS;
     metadata_delete_by_id_in_t  in;
     metadata_delete_by_id_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -868,7 +896,7 @@ HG_TEST_RPC_CB(metadata_delete_by_id, handle)
     /* printf("==PDC_SERVER: Got delete_by_id request: hash=%d, obj_id=%llu\n", in.hash_value, in.obj_id); */
 
     delete_metadata_by_id(&in, &out);
-    
+
     /* out.ret = 1; */
     HG_Respond(handle, NULL, NULL, &out);
 
@@ -886,7 +914,7 @@ HG_TEST_RPC_CB(metadata_delete, handle)
     hg_return_t ret_value = HG_SUCCESS;
     metadata_delete_in_t  in;
     metadata_delete_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -895,7 +923,7 @@ HG_TEST_RPC_CB(metadata_delete, handle)
     /* printf("==PDC_SERVER: Got delete request: hash=%d, obj_id=%llu\n", in.hash_value, in.obj_id); */
 
     delete_metadata_from_hash_table(&in, &out);
-    
+
     /* out.ret = 1; */
     HG_Respond(handle, NULL, NULL, &out);
 
@@ -923,7 +951,7 @@ HG_TEST_RPC_CB(metadata_add_tag, handle)
 
 
     PDC_Server_add_tag_metadata(&in, &out);
-    
+
     /* out.ret = 1; */
     HG_Respond(handle, NULL, NULL, &out);
 
@@ -943,7 +971,7 @@ HG_TEST_RPC_CB(notify_io_complete, handle)
     hg_return_t ret_value = HG_SUCCESS;
     notify_io_complete_in_t  in;
     notify_io_complete_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -951,7 +979,7 @@ HG_TEST_RPC_CB(notify_io_complete, handle)
     HG_Get_input(handle, &in);
     PDC_access_t type = (PDC_access_t)in.io_type;
 
-    /* printf("==PDC_CLIENT: Got %s complete notification from server: obj_id=%llu, shm_addr=[%s]\n", */ 
+    /* printf("==PDC_CLIENT: Got %s complete notification from server: obj_id=%llu, shm_addr=[%s]\n", */
     /*         in.io_type == READ? "read":"write", in.obj_id, in.shm_addr); */
     /* fflush(stdout); */
 
@@ -1012,7 +1040,7 @@ HG_TEST_RPC_CB(metadata_update, handle)
     hg_return_t ret_value = HG_SUCCESS;
     metadata_update_in_t  in;
     metadata_update_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -1021,7 +1049,7 @@ HG_TEST_RPC_CB(metadata_update, handle)
     /* printf("==PDC_SERVER: Got update request: hash=%d, obj_id=%llu\n", in.hash_value, in.obj_id); */
 
     PDC_Server_update_metadata(&in, &out);
-    
+
     /* out.ret = 1; */
     HG_Respond(handle, NULL, NULL, &out);
 
@@ -1038,7 +1066,7 @@ HG_TEST_RPC_CB(close_server, handle)
     hg_return_t ret_value = HG_SUCCESS;
     close_server_in_t  in;
     close_server_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -1095,7 +1123,7 @@ static hg_return_t
 region_release_bulk_transfer_cb (const struct hg_cb_info *hg_cb_info)
 {
     hg_return_t hg_ret = HG_SUCCESS;
-    perr_t ret_value; 
+    perr_t ret_value;
     region_lock_out_t out;
     hg_handle_t handle = HG_BULK_NULL;
     const struct hg_info *hg_info = NULL;
@@ -1118,12 +1146,12 @@ hg_size_t  *data_size;
 hg_uint32_t count;
 */
     FUNC_ENTER(NULL);
-    
+
     bulk_args = (struct lock_bulk_args *)hg_cb_info->arg;
     local_bulk_handle = hg_cb_info->info.bulk.local_handle;
     handle = bulk_args->handle;
     hg_info = HG_Get_info(handle);
-   
+
     if (hg_cb_info->ret == HG_CANCELED) {
         printf("HG_Bulk_transfer() was successfully canceled\n");
         out.ret = 0;
@@ -1141,7 +1169,7 @@ hg_uint32_t count;
     server_region->size = (uint64_t *)malloc(sizeof(uint64_t));
     server_region->offset = (uint64_t *)malloc(sizeof(uint64_t));
     (server_region->size)[0] = size;
-    (server_region->offset)[0] = 0;  
+    (server_region->offset)[0] = 0;
     ret_value = PDC_Server_data_read_direct((bulk_args->in).obj_id, server_region, data_buf);
     if(ret_value != SUCCEED)
         printf("==PDC SERVER: PDC_Server_data_write_direct() failed\n");
@@ -1153,7 +1181,7 @@ printf("next is %d\n", *(int *)(data_buf+16));
 printf("next is %d\n", *(int *)(data_buf+20));
 fflush(stdout);
 */
- 
+
     update_bulk_args = (struct region_update_bulk_args *) malloc(sizeof(struct region_update_bulk_args));
     update_bulk_args->refcount = ATOMIC_VAR_INIT(0);
     update_bulk_args->handle = handle;
@@ -1185,7 +1213,7 @@ fflush(stdout);
 count = HG_Bulk_get_segment_count(mapped_region->remote_bulk_handle);
 from_data_ptrs = (void **)malloc( count * sizeof(void *) );
 data_size = (hg_size_t *)malloc( count * sizeof(hg_size_t) );
-HG_Bulk_access(mapped_region->remote_bulk_handle, 0, size, HG_BULK_READWRITE, count, from_data_ptrs, data_size, NULL); 
+HG_Bulk_access(mapped_region->remote_bulk_handle, 0, size, HG_BULK_READWRITE, count, from_data_ptrs, data_size, NULL);
 printf("each size is %lld, %lld, %lld\n", data_size[0], data_size[1], data_size[2]);
 printf("each addr is %lld, %lld, %lld\n", from_data_ptrs[0], from_data_ptrs[1], from_data_ptrs[2]);
 count = HG_Bulk_get_segment_count(local_bulk_handle);
@@ -1205,7 +1233,7 @@ fflush(stdout);
                 }
             }
         }
-        else { 
+        else {
             region_locked = 1;
             // printf("region is locked\n");
         }
@@ -1264,7 +1292,7 @@ region_release_update_bulk_transfer_cb(const struct hg_cb_info *hg_cb_info)
     HG_Respond(handle, NULL, NULL, &out);
 
     HG_Free_input(handle, &(bulk_args->in));
-    HG_Destroy(handle); 
+    HG_Destroy(handle);
     free(bulk_args);
 
     FUNC_LEAVE(hg_ret);
@@ -1294,7 +1322,7 @@ HG_TEST_RPC_CB(region_release, handle)
     pdc_metadata_t *res_meta;
     region_list_t *elt, *request_region;
     struct region_lock_update_bulk_args *lock_update_bulk_args = NULL;
-    hg_bulk_t origin_bulk_handle = HG_BULK_NULL; 
+    hg_bulk_t origin_bulk_handle = HG_BULK_NULL;
     hg_bulk_t local_bulk_handle = HG_BULK_NULL;
     hg_bulk_t lock_local_bulk_handle = HG_BULK_NULL;
 
@@ -1324,7 +1352,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     server_region->size = (uint64_t *)malloc(sizeof(uint64_t));
                     server_region->offset = (uint64_t *)malloc(sizeof(uint64_t));
                     (server_region->size)[0] = size;
-                    (server_region->offset)[0] = 0; 
+                    (server_region->offset)[0] = 0;
                     ret_value = PDC_Server_data_read_direct(elt->from_obj_id, server_region, data_buf);
                     if(ret_value != SUCCEED)
                         printf("==PDC SERVER: PDC_Server_data_read_direct() failed\n");
@@ -1340,7 +1368,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     lock_update_bulk_args->remote_client_id = elt->client_id;
                     lock_update_bulk_args->data_buf = data_buf;
                     lock_update_bulk_args->server_region = server_region;
- 
+
                     hg_ret = HG_Bulk_transfer(hg_info->context, region_release_update_bulk_transfer_cb, lock_update_bulk_args, HG_BULK_PUSH, elt->addr, elt->bulk_handle, 0, lock_local_bulk_handle, 0, size, &hg_bulk_op_id);
                     if (hg_ret != HG_SUCCESS) {
                         printf("==PDC SERVER ERROR: region_release_bulk_transfer_cb() could not write bulk data\n");
@@ -1363,7 +1391,7 @@ HG_TEST_RPC_CB(region_release, handle)
         }
     }
     // write lock release with mapping case
-    // do data tranfer if it is write lock release with mapping. 
+    // do data tranfer if it is write lock release with mapping.
     else {
         bulk_args = (struct lock_bulk_args *) malloc(sizeof(struct lock_bulk_args));
         /* Keep handle to pass to callback */
@@ -1391,7 +1419,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     count = HG_Bulk_get_segment_count(origin_bulk_handle);
                     from_data_ptrs = (void **)malloc( count * sizeof(void *) );
                     data_size = (hg_size_t *)malloc( count * sizeof(hg_size_t) );
-                    HG_Bulk_access(origin_bulk_handle, 0, size, HG_BULK_READWRITE, count, from_data_ptrs, data_size, NULL); 
+                    HG_Bulk_access(origin_bulk_handle, 0, size, HG_BULK_READWRITE, count, from_data_ptrs, data_size, NULL);
 */
                     size = HG_Bulk_get_size(origin_bulk_handle);
                     data_ptrs = (void *)malloc(size);
@@ -1420,7 +1448,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     }
                     if(elt->local_ndim >= 2) {
                         (server_region->offset)[1] = 0;
-                        (server_region->size)[1] = in.region.count_1; 
+                        (server_region->size)[1] = in.region.count_1;
                     }
                     if(elt->local_ndim >= 3) {
                         (server_region->offset)[2] = 0;
@@ -1435,7 +1463,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     server_region->size = (uint64_t *)malloc(sizeof(uint64_t));
                     server_region->offset = (uint64_t *)malloc(sizeof(uint64_t));
                     (server_region->size)[0] = size;
-                    (server_region->offset)[0] = 0; 
+                    (server_region->offset)[0] = 0;
                     bulk_args->server_region = server_region;
                     bulk_args->mapping_list = elt;
                     bulk_args->addr = elt->local_addr;
@@ -1443,7 +1471,7 @@ HG_TEST_RPC_CB(region_release, handle)
                     hg_ret = HG_Bulk_transfer(hg_info->context, region_release_bulk_transfer_cb, bulk_args, HG_BULK_PULL, elt->local_addr, origin_bulk_handle, 0, local_bulk_handle, 0, size, &hg_bulk_op_id);
                     if (hg_ret != HG_SUCCESS) {
                         error = 1;
-                        printf("==PDC SERVER ERROR: Could not read bulk data\n");  
+                        printf("==PDC SERVER ERROR: Could not read bulk data\n");
                     }
                 }
             }
@@ -1496,7 +1524,7 @@ HG_TEST_RPC_CB(gen_obj_unmap_notification, handle)
     gen_obj_unmap_notification_out_t out;
     pdc_metadata_t *target_obj;
     region_map_t *elt, *tmp;
-    
+
     FUNC_ENTER(NULL);
 
     // Decode input
@@ -1524,7 +1552,7 @@ HG_TEST_RPC_CB(gen_obj_unmap_notification, handle)
             out.ret = 1;
         }
     }
-    
+
 done:
     HG_Respond(handle, NULL, NULL, &out);
     HG_Free_input(handle, &in);
@@ -1542,7 +1570,7 @@ HG_TEST_RPC_CB(gen_reg_unmap_notification, handle)
     gen_reg_unmap_notification_out_t out;
     pdc_metadata_t *target_obj;
     region_map_t *elt, *tmp;
-    
+
     FUNC_ENTER(NULL);
 
     // Decode input
@@ -1571,7 +1599,7 @@ HG_TEST_RPC_CB(gen_reg_unmap_notification, handle)
             out.ret = 1;
         }
     }
-    
+
 done:
     HG_Respond(handle, NULL, NULL, &out);
     HG_Free_input(handle, &in);
@@ -1591,7 +1619,7 @@ HG_TEST_RPC_CB(gen_reg_map_notification, handle)
     int found;
     region_map_t *elt;
     const struct hg_info *info;
-    
+
     FUNC_ENTER(NULL);
 
     // Decode input
@@ -1603,14 +1631,14 @@ HG_TEST_RPC_CB(gen_reg_map_notification, handle)
         out.ret = 0;
         goto done;
     }
-    
+
     found = 0;
     DL_FOREACH(target_obj->region_map_head, elt) {
         if(in.local_obj_id==elt->local_obj_id && in.local_reg_id==elt->local_reg_id) {
             found = 1;
             region_map_t *map_ptr = target_obj->region_map_head;
             PDC_mapping_info_t *tmp_ptr;
-            PDC_LIST_GET_FIRST(tmp_ptr, &map_ptr->ids);         
+            PDC_LIST_GET_FIRST(tmp_ptr, &map_ptr->ids);
             while(tmp_ptr!=NULL && (tmp_ptr->remote_reg_id!=in.remote_reg_id || tmp_ptr->remote_obj_id!=in.remote_obj_id)) {
                 PDC_LIST_TO_NEXT(tmp_ptr, entry);
             }
@@ -1649,7 +1677,7 @@ HG_TEST_RPC_CB(gen_reg_map_notification, handle)
         HG_Addr_dup(info->hg_class, info->addr, &(map_ptr->local_addr));
         HG_Bulk_ref_incr(in.local_bulk_handle);
         map_ptr->local_bulk_handle = in.local_bulk_handle;
-        
+
         PDC_mapping_info_t *m_info_ptr = (PDC_mapping_info_t *)malloc(sizeof(PDC_mapping_info_t));
         m_info_ptr->remote_obj_id = in.remote_obj_id;
         m_info_ptr->remote_reg_id = in.remote_reg_id;
@@ -1690,7 +1718,7 @@ HG_TEST_RPC_CB(query_partial, handle)
     uint32_t *n_meta_ptr, n_buf;
     metadata_query_transfer_in_t in;
     metadata_query_transfer_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -1723,7 +1751,7 @@ HG_TEST_RPC_CB(query_partial, handle)
     // TODO: free buf_sizes
 
     // Note: it seems Mercury bulk transfer has issues if the total transfer size is less
-    //       than 3862 bytes in Eager Bulk mode, so need to add some padding data 
+    //       than 3862 bytes in Eager Bulk mode, so need to add some padding data
     /* pdc_metadata_t *padding; */
     /* if (*n_meta_ptr < 11) { */
     /*     size_t padding_size; */
@@ -1756,7 +1784,7 @@ HG_TEST_RPC_CB(query_partial, handle)
         return EXIT_FAILURE;
     }
 
-    // Fill bulk handle and return number of metadata that satisfy the query 
+    // Fill bulk handle and return number of metadata that satisfy the query
     out.bulk_handle = bulk_handle;
     out.ret = *n_meta_ptr;
 
@@ -1790,12 +1818,27 @@ HG_TEST_THREAD_CB(gen_reg_unmap_notification)
 HG_TEST_THREAD_CB(gen_obj_unmap_notification)
 HG_TEST_THREAD_CB(region_lock)
 HG_TEST_THREAD_CB(query_partial)
+HG_TEST_THREAD_CB(metadata_index_create)
+
+
+hg_id_t
+metadata_index_create_register(hg_class_t *hg_class)
+{
+    hg_id_t ret_value;
+
+    FUNC_ENTER(NULL);
+
+    ret_value = MERCURY_REGISTER(hg_class, "metadata_index_create", metadata_index_create_in_t, metadata_index_create_out_t, metadata_index_create_cb);
+
+done:
+    FUNC_LEAVE(ret_value);
+}
 
 hg_id_t
 gen_obj_id_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "gen_obj_id", gen_obj_id_in_t, gen_obj_id_out_t, gen_obj_id_cb);
@@ -1807,7 +1850,7 @@ hg_id_t
 server_lookup_client_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "server_lookup_client", server_lookup_client_in_t, server_lookup_client_out_t, server_lookup_client_cb);
@@ -1820,7 +1863,7 @@ hg_id_t
 server_lookup_remote_server_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "server_lookup_remote_server", server_lookup_remote_server_in_t, server_lookup_remote_server_out_t, server_lookup_remote_server_cb);
@@ -1833,7 +1876,7 @@ hg_id_t
 client_test_connect_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "client_test_connect", client_test_connect_in_t, client_test_connect_out_t, client_test_connect_cb);
@@ -1845,7 +1888,7 @@ hg_id_t
 notify_io_complete_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "notify_io_complete", notify_io_complete_in_t, notify_io_complete_out_t, notify_io_complete_cb);
@@ -1883,7 +1926,7 @@ hg_id_t
 metadata_query_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "metadata_query", metadata_query_in_t, metadata_query_out_t, metadata_query_cb);
@@ -1908,7 +1951,7 @@ hg_id_t
 metadata_update_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "metadata_update", metadata_update_in_t, metadata_update_out_t, metadata_update_cb);
@@ -1920,7 +1963,7 @@ hg_id_t
 metadata_delete_by_id_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "metadata_delete_by_id", metadata_delete_by_id_in_t, metadata_delete_by_id_out_t, metadata_delete_by_id_cb);
@@ -1932,7 +1975,7 @@ hg_id_t
 metadata_delete_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "metadata_delete", metadata_delete_in_t, metadata_delete_out_t, metadata_delete_cb);
@@ -1944,7 +1987,7 @@ hg_id_t
 close_server_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "close_server", close_server_in_t, close_server_out_t, close_server_cb);
@@ -1956,7 +1999,7 @@ hg_id_t
 gen_reg_map_notification_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "gen_reg_map_notification", gen_reg_map_notification_in_t, gen_reg_map_notification_out_t, gen_reg_map_notification_cb);
@@ -1968,7 +2011,7 @@ hg_id_t
 gen_reg_unmap_notification_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "gen_reg_unmap_notification", gen_reg_unmap_notification_in_t, gen_reg_unmap_notification_out_t, gen_reg_unmap_notification_cb);
@@ -1980,7 +2023,7 @@ hg_id_t
 gen_obj_unmap_notification_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "gen_obj_unmap_notification", gen_obj_unmap_notification_in_t, gen_obj_unmap_notification_out_t, gen_obj_unmap_notification_cb);
@@ -1992,7 +2035,7 @@ hg_id_t
 region_lock_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "region_lock", region_lock_in_t, region_lock_out_t, region_lock_cb);
@@ -2016,7 +2059,7 @@ hg_id_t
 query_partial_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "query_partial", metadata_query_transfer_in_t, metadata_query_transfer_out_t, query_partial_cb);
@@ -2070,7 +2113,7 @@ HG_TEST_RPC_CB(data_server_read, handle)
 done:
     HG_Free_input(handle, &in);
     HG_Destroy(handle);
-    if (ret_value != HG_SUCCESS) 
+    if (ret_value != HG_SUCCESS)
         printf("==PDC_SERVER: data_server_read_cb - Error with HG_Destroy\n");
     fflush(stdout);
     FUNC_LEAVE(ret_value);
@@ -2082,7 +2125,7 @@ hg_id_t
 data_server_read_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "data_server_read", data_server_read_in_t, data_server_read_out_t, data_server_read_cb);
@@ -2134,7 +2177,7 @@ HG_TEST_RPC_CB(data_server_write, handle)
 done:
     HG_Free_input(handle, &in);
     ret_value = HG_Destroy(handle);
-    if (ret_value != HG_SUCCESS) 
+    if (ret_value != HG_SUCCESS)
         printf("==PDC_SERVER: data_server_write_cb - Error with HG_Destroy\n");
     fflush(stdout);
     FUNC_LEAVE(ret_value);
@@ -2146,7 +2189,7 @@ hg_id_t
 data_server_write_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "data_server_write", data_server_write_in_t, data_server_write_out_t, data_server_write_cb);
@@ -2191,7 +2234,7 @@ hg_id_t
 data_server_read_check_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "data_server_read_check", data_server_read_check_in_t, data_server_read_check_out_t, data_server_read_check_cb);
@@ -2235,7 +2278,7 @@ hg_id_t
 data_server_write_check_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
     ret_value = MERCURY_REGISTER(hg_class, "data_server_write_check", data_server_write_check_in_t, data_server_write_check_out_t, data_server_write_check_cb);
@@ -2249,7 +2292,7 @@ HG_TEST_RPC_CB(update_region_loc, handle)
     hg_return_t ret_value = HG_SUCCESS;
     metadata_update_in_t  in;
     metadata_update_out_t out;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -2261,7 +2304,7 @@ HG_TEST_RPC_CB(update_region_loc, handle)
 
     out.ret = 1;
     ret_value = PDC_Server_update_local_region_storage_loc(input_region);
-    if (ret_value != SUCCEED) 
+    if (ret_value != SUCCEED)
         out.ret = -1;
 
     HG_Respond(handle, NULL, NULL, &out);
@@ -2278,10 +2321,10 @@ hg_id_t
 update_region_loc_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
-    ret_value = MERCURY_REGISTER(hg_class, "update_region_loc", update_region_loc_in_t, 
+    ret_value = MERCURY_REGISTER(hg_class, "update_region_loc", update_region_loc_in_t,
                                  update_region_loc_out_t, update_region_loc_cb);
 
     FUNC_LEAVE(ret_value);
@@ -2294,7 +2337,7 @@ HG_TEST_RPC_CB(get_metadata_by_id, handle)
     get_metadata_by_id_in_t  in;
     get_metadata_by_id_out_t out;
     pdc_metadata_t *target;
-    
+
     FUNC_ENTER(NULL);
 
     /* Get input parameters sent on origin through on HG_Forward() */
@@ -2304,7 +2347,7 @@ HG_TEST_RPC_CB(get_metadata_by_id, handle)
 
     PDC_Server_get_local_metadata_by_id(in.obj_id, &target);
 
-    if (target != NULL) 
+    if (target != NULL)
         pdc_metadata_t_to_transfer_t(target, &out.res_meta);
     else {
         printf("==PDC_SERVER: no matching metadata of obj_id=%llu\n", in.obj_id);
@@ -2314,9 +2357,9 @@ HG_TEST_RPC_CB(get_metadata_by_id, handle)
         out.res_meta.obj_name       = "N/A";
         out.res_meta.app_name       = "N/A";
         out.res_meta.tags           = "N/A";
-        out.res_meta.data_location  = "N/A"; 
+        out.res_meta.data_location  = "N/A";
     }
-    
+
     HG_Respond(handle, NULL, NULL, &out);
 
     HG_Free_input(handle, &in);
@@ -2331,10 +2374,10 @@ hg_id_t
 get_metadata_by_id_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
-    ret_value = MERCURY_REGISTER(hg_class, "get_metadata_by_id", get_metadata_by_id_in_t, 
+    ret_value = MERCURY_REGISTER(hg_class, "get_metadata_by_id", get_metadata_by_id_in_t,
                                  get_metadata_by_id_out_t, get_metadata_by_id_cb);
 
     FUNC_LEAVE(ret_value);
@@ -2352,7 +2395,7 @@ HG_TEST_RPC_CB(get_storage_info, handle)
     uint32_t n_region, i;
     uint32_t serialize_len;
     void *buf = NULL;
-    
+
     FUNC_ENTER(NULL);
 
     // Decode input
@@ -2362,7 +2405,7 @@ HG_TEST_RPC_CB(get_storage_info, handle)
     pdc_region_transfer_t_to_list_t(&in.req_region, &request_region);
 
     result_regions = (region_list_t**)calloc(1, sizeof(region_list_t*)*PDC_MAX_OVERLAP_REGION_NUM);
-    for (i = 0; i < PDC_MAX_OVERLAP_REGION_NUM; i++) 
+    for (i = 0; i < PDC_MAX_OVERLAP_REGION_NUM; i++)
         result_regions[i] = (region_list_t*)malloc(sizeof(region_list_t));
 
     if (PDC_Server_get_local_storage_location_of_region(in.obj_id, &request_region, &n_region, result_regions) != SUCCEED) {
@@ -2398,15 +2441,15 @@ done:
 
     if (result_regions != NULL) {
         for (i = 0; i < PDC_MAX_OVERLAP_REGION_NUM; i++) {
-            if (result_regions[i] != NULL) 
+            if (result_regions[i] != NULL)
                 free(result_regions[i]);
         }
         free(result_regions);
     }
 
-    if (buf != NULL) 
+    if (buf != NULL)
         free(buf);
-    
+
     HG_Free_input(handle, &in);
     HG_Destroy(handle);
 
@@ -2419,12 +2462,11 @@ hg_id_t
 get_storage_info_register(hg_class_t *hg_class)
 {
     hg_id_t ret_value;
-    
+
     FUNC_ENTER(NULL);
 
-    ret_value = MERCURY_REGISTER(hg_class, "get_storage_info", get_storage_info_in_t, 
+    ret_value = MERCURY_REGISTER(hg_class, "get_storage_info", get_storage_info_in_t,
                                  pdc_serialized_data_t, get_storage_info_cb);
 
     FUNC_LEAVE(ret_value);
 }
-

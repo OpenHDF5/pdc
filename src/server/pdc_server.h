@@ -1,19 +1,19 @@
 /*
- * Copyright Notice for 
+ * Copyright Notice for
  * Proactive Data Containers (PDC) Software Library and Utilities
  * -----------------------------------------------------------------------------
 
  *** Copyright Notice ***
- 
+
  * Proactive Data Containers (PDC) Copyright (c) 2017, The Regents of the
  * University of California, through Lawrence Berkeley National Laboratory,
  * UChicago Argonne, LLC, operator of Argonne National Laboratory, and The HDF
  * Group (subject to receipt of any required approvals from the U.S. Dept. of
  * Energy).  All rights reserved.
- 
+
  * If you have questions about your rights to use or distribute this software,
  * please contact Berkeley Lab's Innovation & Partnerships Office at  IPO@lbl.gov.
- 
+
  * NOTICE.  This Software was developed under funding from the U.S. Department of
  * Energy and the U.S. Government consequently retains certain rights. As such, the
  * U.S. Government has been granted for itself and others acting on its behalf a
@@ -40,12 +40,13 @@
 #include "pdc_client_server_common.h"
 
 #define CREATE_BLOOM_THRESHOLD  64
-#define PDC_MAX_OVERLAP_REGION_NUM 128 // max number of supported regions for PDC_Server_get_storage_location_of_region() 
+#define PDC_MAX_OVERLAP_REGION_NUM 128 // max number of supported regions for PDC_Server_get_storage_location_of_region()
 #define PDC_STR_DELIM            7
 
 static pdc_cnt_t pdc_num_reg;
 extern hg_class_t *hg_class_g;
 
+perr_t PDC_Server_metadata_index_create(metadata_index_create_in_t *in, metadata_index_create_out_t *out);
 
 perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out);
 /* perr_t insert_obj_name_marker(send_obj_name_marker_in_t *in, send_obj_name_marker_out_t *out); */
@@ -77,7 +78,7 @@ typedef struct pdc_hash_table_entry_head {
     pdc_metadata_t *metadata;
 } pdc_hash_table_entry_head;
 
-/* 
+/*
  * Data server related
  */
 
@@ -106,7 +107,7 @@ typedef struct pdc_client_info_t {
     int             notify_region_update_handle_valid;
     hg_handle_t     notify_region_update_handle;
 } pdc_client_info_t;
- 
+
 typedef struct pdc_remote_server_info_t {
     char            *addr_string;
     int             addr_valid;
@@ -120,7 +121,7 @@ typedef struct pdc_remote_server_info_t {
     int             get_storage_info_handle_valid;
     hg_handle_t     get_storage_info_handle;
 } pdc_remote_server_info_t;
- 
+
 extern hg_thread_mutex_t pdc_client_connect_mutex_g;
 
 typedef struct pdc_data_server_io_list_t {
