@@ -29,7 +29,7 @@ let TOTALPROC=$NCLIENT*$N_NODE
 SERVER=/global/homes/w/wzhang5/software/SoMeta/api/build/bin/pdc_server.exe
  CLOSE=/global/homes/w/wzhang5/software/SoMeta/api/build/bin/close_server
 IMPORT=/global/homes/w/wzhang5/software/SoMeta/apps/search/build/h5boss_import.exe
-SEARCH=/global/homes/w/wzhang5/software/SoMeta/apps/search/build/h5boss_query_random.exe
+SEARCH=/global/homes/w/wzhang5/software/SoMeta/apps/search/build/h5boss_query_random_indexed.exe
 
 PMLIST=/global/homes/w/wzhang5/software/SoMeta/apps/search/pm_list_2000.txt
 
