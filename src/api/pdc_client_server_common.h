@@ -1,19 +1,19 @@
 /*
- * Copyright Notice for 
+ * Copyright Notice for
  * Proactive Data Containers (PDC) Software Library and Utilities
  * -----------------------------------------------------------------------------
 
  *** Copyright Notice ***
- 
+
  * Proactive Data Containers (PDC) Copyright (c) 2017, The Regents of the
  * University of California, through Lawrence Berkeley National Laboratory,
  * UChicago Argonne, LLC, operator of Argonne National Laboratory, and The HDF
  * Group (subject to receipt of any required approvals from the U.S. Dept. of
  * Energy).  All rights reserved.
- 
+
  * If you have questions about your rights to use or distribute this software,
  * please contact Berkeley Lab's Innovation & Partnerships Office at  IPO@lbl.gov.
- 
+
  * NOTICE.  This Software was developed under funding from the U.S. Department of
  * Energy and the U.S. Government consequently retains certain rights. As such, the
  * U.S. Government has been granted for itself and others acting on its behalf a
@@ -68,6 +68,78 @@ typedef enum { READ=0, WRITE=1, NA=2 } PDC_access_t;
 typedef enum { BLOCK=0, NOBLOCK=1 }    PDC_lock_mode_t;
 
 typedef struct pdc_metadata_t pdc_metadata_t;
+
+
+typedef struct {
+    hg_const_string_t    key;
+    hg_const_string_t    str_value;
+
+    int64_t              int64_val;
+    uint64_t             obj_id;
+    uint32_t             key_hash;
+    uint32_t             server_id;
+} metadata_index_create_in_t;
+
+static HG_INLINE hg_return_t
+hg_proc_metadata_index_create_in_t(hg_proc_t proc, void *data)
+{
+    hg_return_t ret;
+    metadata_index_create_in_t *struct_data = (metadata_index_create_in_t*) data;
+
+    ret = hg_proc_hg_const_string_t(proc, &struct_data->key);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+    ret = hg_proc_hg_const_string_t(proc, &struct_data->str_value);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+    ret = hg_proc_int64_t(proc, &struct_data->int64_val);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+    ret = hg_proc_uint64_t(proc, &struct_data->obj_id);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+    ret = hg_proc_uint32_t(proc, &struct_data->key_hash);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+    ret = hg_proc_uint32_t(proc, &struct_data->server_id);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+
+    return ret;
+}
+
+typedef struct {
+    uint64_t ret;
+} metadata_index_create_out_t;
+
+
+static HG_INLINE hg_return_t
+hg_proc_metadata_index_create_out_t(hg_proc_t proc, void *data)
+{
+    hg_return_t ret;
+    metadata_index_create_out_t *struct_data = (metadata_index_create_out_t*) data;
+
+    ret = hg_proc_uint64_t(proc, &struct_data->ret);
+    if (ret != HG_SUCCESS) {
+        HG_LOG_ERROR("Proc error");
+        return ret;
+    }
+
+    return ret;
+}
+
 
 typedef struct region_list_t {
     size_t ndim;
@@ -220,7 +292,7 @@ typedef struct pdc_metadata_t {
 } pdc_metadata_t;
 
 typedef struct {
-    PDC_access_t                io_type;   
+    PDC_access_t                io_type;
     uint32_t                    client_id;
     int32_t                     nclient;
     pdc_metadata_t              meta;
@@ -283,7 +355,7 @@ typedef struct {
 /* MERCURY_GEN_PROC( gen_reg_unmap_notification_out_t, ((int32_t)(ret)) ) */
 
 /* MERCURY_GEN_PROC( gen_reg_map_notification_in_t, ((uint64_t)(local_obj_id)) ((uint64_t)(local_reg_id)) ((uint64_t)(remote_obj_id)) ((uint64_t)(remote_reg_id)) ((int32_t)(remote_client_id)) ((uint8_t)(local_type)) ((uint8_t)(remote_type)) ((uint32_t)(ndim)) ((hg_bulk_t)(bulk_handle)) ) */
-/* MERCURY_GEN_PROC( gen_reg_map_notification_out_t, ((int32_t)(ret)) ) */ 
+/* MERCURY_GEN_PROC( gen_reg_map_notification_out_t, ((int32_t)(ret)) ) */
 
 /* MERCURY_GEN_STRUCT_PROC( region_info_transfer_t, ((hg_size_t)(ndim)) ((uint64_t)(start_0)) ((uint64_t)(start_1)) ((uint64_t)(start_2)) ((uint64_t)(start_3))  ((uint64_t)(count_0)) ((uint64_t)(count_1)) ((uint64_t)(count_2)) ((uint64_t)(count_3)) ((uint64_t)(stride_0)) ((uint64_t)(stride_1)) ((uint64_t)(stride_2)) ((uint64_t)(stride_3)) ) */
 
@@ -294,7 +366,7 @@ typedef struct {
 /* MERCURY_GEN_PROC(bulk_write_in_t,  ((hg_int32_t)(cnt)) ((hg_bulk_t)(bulk_handle))) */
 /* MERCURY_GEN_PROC(bulk_write_out_t, ((hg_uint64_t)(ret)) ) */
 
-/* /1* */ 
+/* /1* */
 /*  * Data Server */
 /*  *1/ */
 
@@ -372,7 +444,7 @@ hg_proc_region_info_transfer_t(hg_proc_t proc, void *data)
 	HG_LOG_ERROR("Proc error");
         return ret;
     }
-    
+
     ret = hg_proc_uint64_t(proc, &struct_data->start_0);
     if (ret != HG_SUCCESS) {
 	HG_LOG_ERROR("Proc error");
@@ -1151,7 +1223,7 @@ hg_proc_notify_region_update_in_t(hg_proc_t proc, void *data)
     ret = hg_proc_uint64_t(proc, &struct_data->obj_id);
     if (ret != HG_SUCCESS) {
     HG_LOG_ERROR("Proc error");
-    }    
+    }
     ret = hg_proc_uint64_t(proc, &struct_data->reg_id);
     if (ret != HG_SUCCESS) {
     HG_LOG_ERROR("Proc error");
