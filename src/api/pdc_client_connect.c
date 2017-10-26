@@ -53,7 +53,7 @@
 
 #include "utils/query_utils.h"
 #include "pdc_dart.h"
-
+#define DART_KEY_LEN 0
 
 
 int is_client_debug_g = 0;
