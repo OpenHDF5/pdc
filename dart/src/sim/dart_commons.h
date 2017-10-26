@@ -30,8 +30,6 @@
 #define SUCCEED 1
 #define FAIL    0
 
-int DART_CHAR_SET_SIZE = 26;
-
 typedef struct {
     const char *start;
     int length;

@@ -4,9 +4,6 @@
 
 #include "dart_utils.h"
 
-int INPUT_TYPE = INPUT_DICTIONARY;
-
-
 
 typedef struct {
     int id;

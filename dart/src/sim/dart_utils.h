@@ -4,14 +4,17 @@
 #include "dart_commons.h"
 
 
-#define INPUT_RANDOM_STRING 0;
-#define INPUT_UUID          1;
-#define INPUT_DICTIONARY    2;
-#define INPUT_WIKI_KEYWORD  3;
 
-// calculated as second.
-double global_clock = 0.0;
-double net_comm_time_base = 0.00005000;
+void to_bytes(uint32_t val, uint8_t *bytes);
+
+uint32_t to_int32(const uint8_t *bytes);
+
+void md5(const uint8_t *initial_msg, size_t initial_len, uint8_t *digest);
+
+double get_current_time();
+
+unsigned long
+hash(char *str, int len);
 
 float get_comm_time();
 
@@ -19,8 +22,8 @@ void global_tick();
 
 char **gen_uuids(int count);
 
-char **gen_random_strings(int count, int maxlen);
+char **gen_random_strings(int count, int maxlen, int alphabet_size);
 
-char **read_words_from_text(char* argv[], int *word_count);
+char **read_words_from_text(const char *fileName, int *word_count);
 
 #endif //DART_UTILS_H
