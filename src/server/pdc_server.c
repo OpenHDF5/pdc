@@ -171,6 +171,11 @@ PDC_Index_server_id_free(hg_hash_table_key_t key)
     free((uint64_t *) key);
 }
 
+static void
+PDC_Index_obj_locator_free(hg_hash_table_value_t value)
+{
+    free((uint64_t *) value);
+}
 
 /*
  * Check if two hash keys are equal
