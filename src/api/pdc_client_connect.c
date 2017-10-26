@@ -2168,10 +2168,6 @@ perr_t PDC_Client_close_all_server()
 done:
     for (i = 0; i < (uint32_t)pdc_server_num_g; i++)
         HG_Destroy(pdc_server_info_g[i].close_server_handle);
-<<<<<<< HEAD
-
-=======
->>>>>>> stable
     FUNC_LEAVE(ret_value);
 }
 
