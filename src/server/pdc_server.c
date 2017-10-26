@@ -154,6 +154,24 @@ art_tree *art_key_prefix_tree_g = NULL;
 art_tree *art_key_suffix_tree_g = NULL;
 
 
+static int
+PDC_Index_server_id_equal(hg_hash_table_key_t vlocation1, hg_hash_table_key_t vlocation2) {
+    return *((uint64_t *) vlocation1) == *((uint64_t *) vlocation2);
+}
+
+static int
+PDC_Index_server_id_hash(hg_hash_table_key_t vlocation)
+{
+    return *((uint64_t *) vlocation);
+}
+
+static void
+PDC_Index_server_id_free(hg_hash_table_key_t key)
+{
+    free((uint64_t *) key);
+}
+
+
 /*
  * Check if two hash keys are equal
  *
