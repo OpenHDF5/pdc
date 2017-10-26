@@ -150,6 +150,10 @@ pdc_data_server_io_list_t *pdc_data_server_read_list_head_g = NULL;
 pdc_data_server_io_list_t *pdc_data_server_write_list_head_g = NULL;
 
 
+art_tree *art_key_prefix_tree_g = NULL;
+art_tree *art_key_suffix_tree_g = NULL;
+
+
 /*
  * Check if two hash keys are equal
  *
