@@ -76,8 +76,9 @@ pdc_server_info_t     *pdc_server_info_g = NULL;
 static int            *debug_server_id_count = NULL;
 
 PDC_Request_t           *pdc_io_request_list_g = NULL;
-
+#ifdef ENABLE_INDEX
 static hg_id_t         metadata_index_create_g;
+#endif
 
 static int             mercury_has_init_g = 0;
 static hg_class_t     *send_class_g = NULL;
@@ -552,6 +553,7 @@ done:
     FUNC_LEAVE(ret_value);
 }
 
+#ifdef ENABLE_INDEX
 // metadata_index_create callback
 static hg_return_t
 client_metadata_index_create_cb(const struct hg_cb_info *callback_info)
@@ -559,6 +561,7 @@ client_metadata_index_create_cb(const struct hg_cb_info *callback_info)
     hg_return_t ret_value = HG_SUCCESS;
     hg_handle_t handle;
     struct client_lookup_args *client_lookup_args;
+
     metadata_index_create_out_t output;
 
     FUNC_ENTER(NULL);
@@ -578,6 +581,7 @@ done:
     HG_Destroy(handle);
     FUNC_LEAVE(ret_value);
 }
+#endif
 
 static hg_return_t
 client_region_lock_rpc_cb(const struct hg_cb_info *callback_info)
@@ -794,10 +798,10 @@ perr_t PDC_Client_mercury_init(hg_class_t **hg_class, hg_context_t **hg_context,
 
     PDC_get_self_addr(*hg_class, self_addr);
 
-
+#ifdef ENABLE_INDEX
     // Register metadata_index_create_g
     metadata_index_create_g                   = metadata_index_create_register(*hg_class);
-
+#endif
     // Register RPC
     client_test_connect_register_id_g         = client_test_connect_register(*hg_class);
     gen_obj_register_id_g                     = gen_obj_id_register(*hg_class);
@@ -1965,8 +1969,10 @@ perr_t PDC_Client_send_name_recv_id(const char *obj_name, pdcid_t obj_create_pro
     gen_obj_id_in_t in;
     uint32_t hash_name_value;
     struct client_lookup_args lookup_args;
-
+#ifdef ENABLE_INDEX
     hg_handle_t metadata_index_create_handle;
+
+#endif
 
     FUNC_ENTER(NULL);
 

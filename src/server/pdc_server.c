@@ -3867,7 +3867,42 @@ done:
     fflush(stdout);
     FUNC_LEAVE(ret_value);
 }
+// this function is for filtering all metadata objects matching given filters.
+int filter_all_metadata_by_search_key(pdc_metadata_t *metadata, metadata_query_transfer_in_t *constraints,
+    const char *k_query, const char *vfrom_query,
+    const char *vto_query){
 
+    int ret_value = 1;
+
+    println("pattern query starts ... ");
+    // parse query conditions from constraints->tags,
+    char * qdelim = NULL;
+    // for non range queries, we use ':' as delimiter
+    qdelim = strchr(constraints->tags, ':');
+    if (qdelim) {
+        println("k_query %s, v_query %s", k_query, vfrom_query);
+        int rst = 0;
+        if (strlen(vfrom_query)<=0) {
+            rst = k_v_matches_p(metadata->tags, k_query, NULL);
+        } else {
+            rst = k_v_matches_p(metadata->tags, k_query, vfrom_query);
+        }
+        println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
+        // determine results
+        ret_value = (rst? 1 : -1);
+        return ret_value
+    }
+    // for range queries, we use '~' for delimiter
+    qdelim = NULL;
+    qdelim = strchr(constraints->tags, '~');
+    if (qdelim) {
+        int from = atoi(vfrom_query);
+        int to = atoi(vto_query);
+        int rst = is_value_in_range(metadata->tags, k_query, from, to);
+        ret_value = (rst ? 1 : -1);
+        return ret_value;
+    }
+}
 /*
  * Check if the metadata satisfies the constraint received from client
  *
@@ -3905,7 +3940,7 @@ static int is_metadata_satisfy_constraint(pdc_metadata_t *metadata, metadata_que
     }
     if (constraints->time_step_from > 0 && constraints->time_step_to > 0 &&
         (metadata->time_step < constraints->time_step_from || metadata->time_step > constraints->time_step_to)
-       ) {
+        ) {
         ret_value = -1;
         goto done;
     }
@@ -3923,39 +3958,159 @@ static int is_metadata_satisfy_constraint(pdc_metadata_t *metadata, metadata_que
             }
             goto done;
         }else {
-            println("pattern query starts ... ");
-            // parse query conditions from constraints->tags,
-            char * qdelim = NULL;
-            // for non range queries, we use ':' as delimiter
-            qdelim = strchr(constraints->tags, ':');
-            if (qdelim) {
-                println("k_query %s, v_query %s", k_query, vfrom_query);
-                int rst = 0;
-                if (strlen(vfrom_query)<=0) {
-                    rst = k_v_matches_p(metadata->tags, k_query, NULL);
-                } else {
-                    rst = k_v_matches_p(metadata->tags, k_query, vfrom_query);
-                }
-                println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
-                // determine results
-                ret_value = (rst? 1 : -1);
-                goto done;
-            }
-            // for range queries, we use '~' for delimiter
-            qdelim = NULL;
-            qdelim = strchr(constraints->tags, '~');
-            if (qdelim) {
-                int from = atoi(vfrom_query);
-                int to = atoi(vto_query);
-                int rst = is_value_in_range(metadata->tags, k_query, from, to);
-                ret_value = (rst ? 1 : -1);
-                goto done;
-            }
+
+            ret_value = filter_all_metadata_by_search_key(metadata, constraints,
+                    k_query, vfrom_query,vto_query);
+            goto done;
         }
     }
 
 done:
     FUNC_LEAVE(ret_value);
+}
+
+
+void iterate_value_prefix_in_art(art_tree *value_art_tree){
+    art_iter_prefix();
+}
+
+int index_search(metadata_query_transfer_in_t *in, uint32_t *n_meta, void ***buf_ptrs, char *k_query, char *vfrom_query, char *vto_query){
+    int result = 0;
+
+    uint32_t iter = 0;
+    hg_hash_table_iter_t hash_table_iter;
+    pdc_hash_table_entry_head *head;
+    uint64_t *elt;
+    int n_entry;
+
+    if (art_key_prefix_tree_g == NULL) {
+        println("==PDC_SERVER: art_key_prefix_tree_g not initilized! Fall back to brutal_force_partial_search. ");
+
+        result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+    } else {
+        println("Index search starts ... ");
+        // parse query conditions from constraints->tags,
+        char * qdelim = NULL;
+        // for non range queries, we use ':' as delimiter
+        qdelim = strchr(in->tags, ':');
+        if (qdelim) {
+            println("k_query %s, v_query %s", k_query, vfrom_query);
+            int pattern_type = determine_pattern_type(k_query);
+
+            char *tok = NULL;
+            switch(pattern_type){
+                case PATTERN_EXACT:
+                    result = equals(str, pattern);
+                    break;
+                case PATTERN_PREFIX:
+                    tok = subrstr(pattern, strlen(pattern)-1);
+                    result = iterate_key_prefix_in_art(art_key_prefix_tree_g, tok,
+                        strlen(vfrom_query));
+                    break;
+                case PATTERN_SUFFIX:
+                    tok = substr(pattern, 1);
+                    result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+                    break;
+                case PATTERN_MIDDLE:
+                    tok = substring(pattern, 1, strlen(pattern)-1);
+                    result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+                    break;
+                default:
+                    break;
+            }
+
+
+            println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
+
+        }
+        // for range queries, we use '~' for delimiter
+        qdelim = NULL;
+        qdelim = strchr(in->tags, '~');
+        if (qdelim) {
+            int from = atoi(vfrom_query);
+            int to = atoi(vto_query);
+            int rst = is_value_in_range(metadata->tags, k_query, from, to);
+
+        }
+
+        char *star = strchr(k_query, '*');
+        if (star != NULL) { // pattern matching required.
+
+        } else { // Exact matching required.
+            index_leaf_content* leaf_cnt =
+             (index_leaf_content*)art_search(art_key_prefix_tree_g,
+                 (unsigned char *)k_query, strlen(k_query));
+
+             if (leaf_cnt != NULL) {
+                 // Not a range search.
+                 if (strlen(vto_query)<=0) {
+                     // If value is also queried.
+                     // Every leaf node of the key index contains a pointer to the
+                     // obj_id hash table and also a pointer to the value tree.
+                     hg_hash_table_t *key_obj_id_table = NULL;
+                     art_tree *value_tree = NULL;
+                     hg_hash_table_t *value_obj_id_table = NULL;
+
+                     //1. Retrieve hash table on the key tree leaf_cnt
+                     key_obj_id_table = leaf_cnt->obj_id_table;
+                     //2. Retrieve the value tree leaves.
+                     value_tree = leaf_cnt->extra_index;
+                 } else {
+                     // TODO: A range search, but currently not supported.
+                     // FIXME: use brutal_force_partial_search for now.
+                     result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+                 }
+             } else {
+                 // No exact key matched. No need for value tree search.
+                 println("==PDC_SERVER: art_key_prefix_tree_g exact key match on %s not found!", k_query);
+                 result = 0;
+             }
+        }
+    }
+
+    result = 1;
+    return result;
+}
+
+int brutal_force_partial_search(metadata_query_transfer_in_t *in, uint32_t *n_meta, void ***buf_ptrs, char *k_query, char *vfrom_query, char *vto_query){
+    int result = 0;
+
+    uint32_t iter = 0;
+    hg_hash_table_iter_t hash_table_iter;
+    pdc_hash_table_entry_head *head;
+    pdc_metadata_t *elt;
+    int n_entry;
+
+    if (metadata_hash_table_g != NULL) {
+
+        n_entry = hg_hash_table_num_entries(metadata_hash_table_g);
+        hg_hash_table_iterate(metadata_hash_table_g, &hash_table_iter);
+
+
+        while (n_entry != 0 && hg_hash_table_iter_has_more(&hash_table_iter)) {
+            head = hg_hash_table_iter_next(&hash_table_iter);
+            DL_FOREACH(head->metadata, elt) {
+                // List all objects, no need to check other constraints
+                if (in->is_list_all == 1) {
+                    (*buf_ptrs)[iter++] = elt;
+                }
+                // check if current metadata matches search constraint
+                else if (is_metadata_satisfy_constraint(elt, in, k_query, vfrom_query, vto_query) == 1) {
+                    (*buf_ptrs)[iter++] = elt;
+                }
+            }
+        }
+        *n_meta = iter;
+
+        printf("==PDC_SERVER: brutal_force_partial_search: Total matching results: %d\n", *n_meta);
+        result = 1;
+    }  // if (metadata_hash_table_g != NULL)
+    else {
+        printf("==PDC_SERVER: metadata_hash_table_g not initilized!\n");
+        result = 0;
+    }
+
+    return result;
 }
 
 /*
@@ -4000,45 +4155,63 @@ perr_t PDC_Server_get_partial_query_result(metadata_query_transfer_in_t *in, uin
         vfrom_query = get_key(vfrom_query, '-');
     }
 
-    // TODO: free buf_ptrs
-    if (metadata_hash_table_g != NULL) {
+    // TODO: free buf_ptrs in the caller function of this function
+#ifdef ENABLE_INDEX
+    int search_rst = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+#else
+    int search_rst = index_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+#endif
 
-        n_entry = hg_hash_table_num_entries(metadata_hash_table_g);
-        hg_hash_table_iterate(metadata_hash_table_g, &hash_table_iter);
-
-
-        while (n_entry != 0 && hg_hash_table_iter_has_more(&hash_table_iter)) {
-            head = hg_hash_table_iter_next(&hash_table_iter);
-            DL_FOREACH(head->metadata, elt) {
-                // List all objects, no need to check other constraints
-                if (in->is_list_all == 1) {
-                    (*buf_ptrs)[iter++] = elt;
-                }
-                // check if current metadata matches search constraint
-                else if (is_metadata_satisfy_constraint(elt, in, k_query, vfrom_query, vto_query) == 1) {
-                    (*buf_ptrs)[iter++] = elt;
-                }
-            }
-        }
-        *n_meta = iter;
-
-        printf("PDC_Server_get_partial_query_result: Total matching results: %d\n", *n_meta);
-
-    }  // if (metadata_hash_table_g != NULL)
-    else {
-        printf("==PDC_SERVER: metadata_hash_table_g not initialized!\n");
-        ret_value = FAIL;
-        goto done;
+    if (search_rst) {
+        ret_value = SUCCEED;
     }
 
     timer_pause(&timer);
 
     println("Time to address query %s on server = %ld , with %d metadata objects obtained.", in->tags, timer_delta_us(&timer), *n_meta);
 
-    ret_value = SUCCEED;
-
 done:
     FUNC_LEAVE(ret_value);
+
+//     // TODO: free buf_ptrs
+//     if (metadata_hash_table_g != NULL) {
+
+//         n_entry = hg_hash_table_num_entries(metadata_hash_table_g);
+//         hg_hash_table_iterate(metadata_hash_table_g, &hash_table_iter);
+
+
+//         while (n_entry != 0 && hg_hash_table_iter_has_more(&hash_table_iter)) {
+//             head = hg_hash_table_iter_next(&hash_table_iter);
+//             DL_FOREACH(head->metadata, elt) {
+//                 // List all objects, no need to check other constraints
+//                 if (in->is_list_all == 1) {
+//                     (*buf_ptrs)[iter++] = elt;
+//                 }
+//                 // check if current metadata matches search constraint
+//                 else if (is_metadata_satisfy_constraint(elt, in, k_query, vfrom_query, vto_query) == 1) {
+//                     (*buf_ptrs)[iter++] = elt;
+//                 }
+//             }
+//         }
+//         *n_meta = iter;
+
+//         printf("PDC_Server_get_partial_query_result: Total matching results: %d\n", *n_meta);
+
+//     }  // if (metadata_hash_table_g != NULL)
+//     else {
+//         printf("==PDC_SERVER: metadata_hash_table_g not initialized!\n");
+//         ret_value = FAIL;
+//         goto done;
+//     }
+
+//     timer_pause(&timer);
+
+//     println("Time to address query %s on server = %ld , with %d metadata objects obtained.", in->tags, timer_delta_us(&timer), *n_meta);
+
+//     ret_value = SUCCEED;
+
+// done:
+//     FUNC_LEAVE(ret_value);
 }
 
 /*

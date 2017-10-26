@@ -613,8 +613,12 @@ perr_t pdc_transfer_t_to_metadata_t(pdc_metadata_transfer_t *transfer, pdc_metad
 
 
 #ifndef IS_PDC_SERVER
+
 // Dummy function for client to compile, real function is used only by server and code is in pdc_server.c
+
+#ifdef ENABLE_INDEX
 perr_t PDC_Server_metadata_index_create(metadata_index_create_in_t *in, metadata_index_create_out_t *out){return SUCCEED;}
+#endif
 
 hg_return_t PDC_Server_get_client_addr(const struct hg_cb_info *callback_info) {return SUCCEED;}
 perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out) {return SUCCEED;}

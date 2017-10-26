@@ -71,8 +71,6 @@ typedef enum { BLOCK=0, NOBLOCK=1 }    PDC_lock_mode_t;
 typedef struct pdc_metadata_t pdc_metadata_t;
 
 
-#ifdef ENABLE_INDEX
-
 typedef struct {
     hg_const_string_t    key;
     hg_const_string_t    str_value;
@@ -142,7 +140,7 @@ hg_proc_metadata_index_create_out_t(hg_proc_t proc, void *data)
 
     return ret;
 }
-#endif
+
 
 typedef struct region_list_t {
     size_t   ndim;
