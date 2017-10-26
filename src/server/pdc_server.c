@@ -4000,7 +4000,7 @@ int index_search(metadata_query_transfer_in_t *in, uint32_t *n_meta, void ***buf
         if (qdelim) {
             println("k_query %s, v_query %s", k_query, vfrom_query);
             int pattern_type = determine_pattern_type(k_query);
-
+        }
             // char *tok = NULL;
             // switch(pattern_type){
             //     case PATTERN_EXACT:
