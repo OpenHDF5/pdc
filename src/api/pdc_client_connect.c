@@ -1050,7 +1050,7 @@ perr_t PDC_Client_finalize()
     }
     hg_ret = HG_Finalize(send_class_g);
     if (hg_ret != HG_SUCCESS) {
-        printf("==PDC_CLIENT[%d]: PDC_Client_finalize - error with HG_Context_destroy\n", pdc_client_mpi_rank_g);
+        printf("==PDC_CLIENT[%d]: PDC_Client_finalize - error with HG_Finalize\n", pdc_client_mpi_rank_g);
         ret_value = FAIL;
         goto done;
     }
