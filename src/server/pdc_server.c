@@ -3894,7 +3894,7 @@ int filter_all_metadata_by_search_key(pdc_metadata_t *metadata, metadata_query_t
         println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
         // determine results
         ret_value = (rst? 1 : -1);
-        return ret_value
+        return ret_value;
     }
     // for range queries, we use '~' for delimiter
     qdelim = NULL;
@@ -3975,7 +3975,7 @@ done:
 
 
 void iterate_value_prefix_in_art(art_tree *value_art_tree){
-    art_iter_prefix();
+    //art_iter_prefix();
 }
 
 int index_search(metadata_query_transfer_in_t *in, uint32_t *n_meta, void ***buf_ptrs, char *k_query, char *vfrom_query, char *vto_query){
