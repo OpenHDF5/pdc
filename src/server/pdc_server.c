@@ -4001,75 +4001,75 @@ int index_search(metadata_query_transfer_in_t *in, uint32_t *n_meta, void ***buf
             println("k_query %s, v_query %s", k_query, vfrom_query);
             int pattern_type = determine_pattern_type(k_query);
 
-            char *tok = NULL;
-            switch(pattern_type){
-                case PATTERN_EXACT:
-                    result = equals(str, pattern);
-                    break;
-                case PATTERN_PREFIX:
-                    tok = subrstr(pattern, strlen(pattern)-1);
-                    result = iterate_key_prefix_in_art(art_key_prefix_tree_g, tok,
-                        strlen(vfrom_query));
-                    break;
-                case PATTERN_SUFFIX:
-                    tok = substr(pattern, 1);
-                    result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
-                    break;
-                case PATTERN_MIDDLE:
-                    tok = substring(pattern, 1, strlen(pattern)-1);
-                    result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
-                    break;
-                default:
-                    break;
-            }
+            // char *tok = NULL;
+            // switch(pattern_type){
+            //     case PATTERN_EXACT:
+            //         result = equals(str, pattern);
+            //         break;
+            //     case PATTERN_PREFIX:
+            //         tok = subrstr(pattern, strlen(pattern)-1);
+            //         result = iterate_key_prefix_in_art(art_key_prefix_tree_g, tok,
+            //             strlen(vfrom_query));
+            //         break;
+            //     case PATTERN_SUFFIX:
+            //         tok = substr(pattern, 1);
+            //         result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+            //         break;
+            //     case PATTERN_MIDDLE:
+            //         tok = substring(pattern, 1, strlen(pattern)-1);
+            //         result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+            //         break;
+            //     default:
+            //         break;
+            // }
 
 
-            println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
+        //     println("k_query %s, v_query %s, result %d", k_query, vfrom_query, rst);
 
-        }
-        // for range queries, we use '~' for delimiter
-        qdelim = NULL;
-        qdelim = strchr(in->tags, '~');
-        if (qdelim) {
-            int from = atoi(vfrom_query);
-            int to = atoi(vto_query);
-            int rst = is_value_in_range(metadata->tags, k_query, from, to);
+        // }
+        // // for range queries, we use '~' for delimiter
+        // qdelim = NULL;
+        // qdelim = strchr(in->tags, '~');
+        // if (qdelim) {
+        //     int from = atoi(vfrom_query);
+        //     int to = atoi(vto_query);
+        //     int rst = is_value_in_range(metadata->tags, k_query, from, to);
 
-        }
+        // }
 
-        char *star = strchr(k_query, '*');
-        if (star != NULL) { // pattern matching required.
+        // char *star = strchr(k_query, '*');
+        // if (star != NULL) { // pattern matching required.
 
-        } else { // Exact matching required.
-            index_leaf_content* leaf_cnt =
-             (index_leaf_content*)art_search(art_key_prefix_tree_g,
-                 (unsigned char *)k_query, strlen(k_query));
+        // } else { // Exact matching required.
+        //     index_leaf_content* leaf_cnt =
+        //      (index_leaf_content*)art_search(art_key_prefix_tree_g,
+        //          (unsigned char *)k_query, strlen(k_query));
 
-             if (leaf_cnt != NULL) {
-                 // Not a range search.
-                 if (strlen(vto_query)<=0) {
-                     // If value is also queried.
-                     // Every leaf node of the key index contains a pointer to the
-                     // obj_id hash table and also a pointer to the value tree.
-                     hg_hash_table_t *key_obj_id_table = NULL;
-                     art_tree *value_tree = NULL;
-                     hg_hash_table_t *value_obj_id_table = NULL;
+        //      if (leaf_cnt != NULL) {
+        //          // Not a range search.
+        //          if (strlen(vto_query)<=0) {
+        //              // If value is also queried.
+        //              // Every leaf node of the key index contains a pointer to the
+        //              // obj_id hash table and also a pointer to the value tree.
+        //              hg_hash_table_t *key_obj_id_table = NULL;
+        //              art_tree *value_tree = NULL;
+        //              hg_hash_table_t *value_obj_id_table = NULL;
 
-                     //1. Retrieve hash table on the key tree leaf_cnt
-                     key_obj_id_table = leaf_cnt->obj_id_table;
-                     //2. Retrieve the value tree leaves.
-                     value_tree = leaf_cnt->extra_index;
-                 } else {
-                     // TODO: A range search, but currently not supported.
-                     // FIXME: use brutal_force_partial_search for now.
-                     result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
-                 }
-             } else {
-                 // No exact key matched. No need for value tree search.
-                 println("==PDC_SERVER: art_key_prefix_tree_g exact key match on %s not found!", k_query);
-                 result = 0;
-             }
-        }
+        //              //1. Retrieve hash table on the key tree leaf_cnt
+        //              key_obj_id_table = leaf_cnt->obj_id_table;
+        //              //2. Retrieve the value tree leaves.
+        //              value_tree = leaf_cnt->extra_index;
+        //          } else {
+        //              // TODO: A range search, but currently not supported.
+        //              // FIXME: use brutal_force_partial_search for now.
+        //              result = brutal_force_partial_search(in, n_meta, buf_ptrs, k_query, vfrom_query, vto_query);
+        //          }
+        //      } else {
+        //          // No exact key matched. No need for value tree search.
+        //          println("==PDC_SERVER: art_key_prefix_tree_g exact key match on %s not found!", k_query);
+        //          result = 0;
+        //      }
+        // }
     }
 
     result = 1;
