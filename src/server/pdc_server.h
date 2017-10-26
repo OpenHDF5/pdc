@@ -39,6 +39,12 @@
 
 #include "pdc_client_server_common.h"
 
+#include "query_utils.h"
+#include "timer_utils.h"
+#include "vector.h"
+#include "art.h"
+#include "hashset.h"
+
 #define CREATE_BLOOM_THRESHOLD  64
 #define PDC_MAX_OVERLAP_REGION_NUM 128 // max number of supported regions for PDC_Server_get_storage_location_of_region()
 #define PDC_STR_DELIM            7
