@@ -1079,7 +1079,12 @@ perr_t PDC_Client_finalize()
         }
     }
 
-    printf("send_context_g is NULL: %d\n", send_context_g==NULL);
+    printf("send_context_g is NULL: ");
+    if (send_context_g==NULL){
+        printf("true\n");
+    } else {
+        printf("false\n");
+    }
     hg_ret = HG_Context_destroy(send_context_g);
     if (hg_ret != HG_SUCCESS) {
         printf("==PDC_CLIENT[%d]: PDC_Client_finalize - error with HG_Context_destroy\n", pdc_client_mpi_rank_g);

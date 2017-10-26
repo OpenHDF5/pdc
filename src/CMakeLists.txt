@@ -35,7 +35,7 @@ add_definitions(-DENABLE_LUSTRE=1)
 #add_definitions(-DENABLE_TIMING=1)
 add_definitions(-DENABLE_CHECKPOINT=1)
 #add_definitions(-DENABLE_MULTITHREAD=1)
-add_definitions(-DENABLE_INDEX=1)
+#add_definitions(-DENABLE_INDEX=1)
 
 if(DEFINED ENV{ENABLE_MPI})
   if("$ENV{ENABLE_MPI}" STREQUAL "")
