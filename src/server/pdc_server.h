@@ -74,6 +74,23 @@ hg_return_t PDC_Server_work_done_cb(const struct hg_cb_info *callback_info);
 /*     struct pdc_metadata_name_mark_t *prev; */
 /* } pdc_metadata_name_mark_t; */
 
+
+// Struct used for iterating index and collecting object IDs.
+typedef struct {
+    int iterate_index_on_leaf;
+    hashset_t object_id_set;
+} art_iterating_collector;
+
+typedef struct {
+    // On the leaf of ART, we maintain a hash table of IDs of all objects containing that key.
+    hg_hash_table_t *obj_id_table;
+
+    int data_type;
+    // Also, for key lookup ART, we also maintain the pointer to the value tree
+    void *extra_index;
+} index_leaf_content;
+
+
 typedef struct pdc_hash_table_entry_head {
     int n_obj;
     void *bloom;
