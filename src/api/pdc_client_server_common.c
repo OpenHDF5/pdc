@@ -655,7 +655,7 @@ hg_return_t PDC_Client_get_data_from_server_shm_cb(const struct hg_cb_info *call
 
 #endif
 
-
+#ifdef ENABLE_INDEX
 /* static hg_return_t */
 // metadata_index_create_cb(hg_handle_t handle)
 HG_TEST_RPC_CB(metadata_index_create, handle)
@@ -680,7 +680,7 @@ HG_TEST_RPC_CB(metadata_index_create, handle)
 
     return ret;
 }
-
+#endif
 
 /*
  * The routine that sets up the routines that actually do the work.
@@ -1823,7 +1823,10 @@ HG_TEST_THREAD_CB(gen_reg_unmap_notification)
 HG_TEST_THREAD_CB(gen_obj_unmap_notification)
 HG_TEST_THREAD_CB(region_lock)
 HG_TEST_THREAD_CB(query_partial)
+
+#ifdef ENABLE_INDEX
 HG_TEST_THREAD_CB(metadata_index_create)
+
 
 
 hg_id_t
@@ -1838,6 +1841,7 @@ metadata_index_create_register(hg_class_t *hg_class)
 done:
     FUNC_LEAVE(ret_value);
 }
+#endif
 
 hg_id_t
 gen_obj_id_register(hg_class_t *hg_class)

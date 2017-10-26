@@ -51,6 +51,11 @@
 #include "pdc_client_server_common.h"
 #include "pdc_obj_pkg.h"
 
+#include "utils/query_utils.h"
+#include "pdc_dart.h"
+
+
+
 int is_client_debug_g = 0;
 
 int                    pdc_client_mpi_rank_g = 0;
@@ -71,6 +76,8 @@ pdc_server_info_t     *pdc_server_info_g = NULL;
 static int            *debug_server_id_count = NULL;
 
 PDC_Request_t           *pdc_io_request_list_g = NULL;
+
+static hg_id_t         metadata_index_create_g;
 
 static int             mercury_has_init_g = 0;
 static hg_class_t     *send_class_g = NULL;
@@ -545,6 +552,32 @@ done:
     FUNC_LEAVE(ret_value);
 }
 
+// metadata_index_create callback
+static hg_return_t
+client_metadata_index_create_cb(const struct hg_cb_info *callback_info)
+{
+    hg_return_t ret_value = HG_SUCCESS;
+    hg_handle_t handle;
+    struct client_lookup_args *client_lookup_args;
+    metadata_index_create_out_t output;
+
+    FUNC_ENTER(NULL);
+
+    /* printf("Entered client_rpc_cb()"); */
+    client_lookup_args = (struct client_lookup_args*) callback_info->arg;
+    handle = callback_info->info.forward.handle;
+
+    /* Get output from server*/
+    ret_value = HG_Get_output(handle, &output);
+    /* printf("Return value=%llu\n", output.ret); */
+    client_lookup_args->obj_id = output.ret;
+
+    work_todo_g--;
+
+done:
+    HG_Destroy(handle);
+    FUNC_LEAVE(ret_value);
+}
 
 static hg_return_t
 client_region_lock_rpc_cb(const struct hg_cb_info *callback_info)
@@ -760,6 +793,10 @@ perr_t PDC_Client_mercury_init(hg_class_t **hg_class, hg_context_t **hg_context,
     *hg_context = HG_Context_create(*hg_class);
 
     PDC_get_self_addr(*hg_class, self_addr);
+
+
+    // Register metadata_index_create_g
+    metadata_index_create_g                   = metadata_index_create_register(*hg_class);
 
     // Register RPC
     client_test_connect_register_id_g         = client_test_connect_register(*hg_class);
@@ -1042,6 +1079,7 @@ perr_t PDC_Client_finalize()
         }
     }
 
+    printf("send_context_g is NULL: %d\n", send_context_g==NULL);
     hg_ret = HG_Context_destroy(send_context_g);
     if (hg_ret != HG_SUCCESS) {
         printf("==PDC_CLIENT[%d]: PDC_Client_finalize - error with HG_Context_destroy\n", pdc_client_mpi_rank_g);
@@ -1922,6 +1960,8 @@ perr_t PDC_Client_send_name_recv_id(const char *obj_name, pdcid_t obj_create_pro
     gen_obj_id_in_t in;
     uint32_t hash_name_value;
     struct client_lookup_args lookup_args;
+
+    hg_handle_t metadata_index_create_handle;
 
     FUNC_ENTER(NULL);
 
