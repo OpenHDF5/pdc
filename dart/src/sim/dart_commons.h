@@ -24,6 +24,8 @@
 #include <time.h>
 #include <uuid/uuid.h>
 
+#include "dart_random_number.h"
+
 
 
 #define ADDR_MAX 128

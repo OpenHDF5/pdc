@@ -16,9 +16,9 @@ double get_current_time();
 unsigned long
 hash(char *str, int len);
 
-float get_comm_time();
+double get_comm_time();
 
-void global_tick();
+void global_tick(double tick);
 
 char **gen_uuids(int count);
 

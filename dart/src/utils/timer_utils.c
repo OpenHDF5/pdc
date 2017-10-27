@@ -5,7 +5,7 @@
 /** Local function that returns the ticks
  *	(number of microsseconds) since the Epoch.
  */
-static suseconds_t get_ticks()
+suseconds_t get_ticks()
 {
 	struct timeval tmp;
 	gettimeofday(&(tmp), NULL);

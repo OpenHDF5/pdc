@@ -42,7 +42,7 @@ hg_thread_pool_t *hg_test_thread_pool_g;
 
 hg_atomic_int32_t close_server_g;
 
-uint64_t pdc_id_seq_g = PDC_SERVER_ID_INTERVEL;
+uint32_t pdc_id_seq_g = PDC_SERVER_ID_INTERVEL;
 // actual value for each server is set by PDC_Server_init()
 //
 
@@ -118,8 +118,10 @@ uint32_t PDC_get_server_by_obj_id(uint64_t obj_id, int n_server)
 
     FUNC_ENTER(NULL);
 
-    ret_value  = (uint32_t)(obj_id / PDC_SERVER_ID_INTERVEL) - 1;
-    ret_value %= n_server;
+    ret_value = ((obj_id & 0x1111000000000000) >> 48) % n_server;
+
+    // ret_value  = (uint32_t)(obj_id / PDC_SERVER_ID_INTERVEL) - 1;
+    // ret_value %= n_server;
 
     FUNC_LEAVE(ret_value);
 }
@@ -138,6 +140,10 @@ static uint32_t pdc_hash_djb2(const char *pc)
     return hash;
 }
 
+uint64_t get_current_milliseconds(){
+    return (uint64_t)get_ticks()/1000;
+}
+
 /*
 static uint32_t pdc_hash_sdbm(const char *pc)
 {
@@ -152,6 +158,11 @@ static uint32_t pdc_hash_sdbm(const char *pc)
     return hash;
 }
  */
+
+uint16_t PDC_get_server_id_by_name_and_timestep(uint32_t hash_name_value, uint32_t timestep, uint16_t server_count)
+{
+    return (hash_name_value + time_step) % server_count;
+}
 
 uint32_t PDC_get_hash_by_name(const char *name)
 {

@@ -124,7 +124,8 @@ static inline uint32_t get_server_id_by_hash_name(const char *name)
 
 static inline uint32_t get_server_id_by_obj_id(uint64_t obj_id)
 {
-    return (uint32_t)((obj_id / PDC_SERVER_ID_INTERVEL - 1) % pdc_server_num_g);
+    return (uint32_t)PDC_get_server_by_obj_id(obj_id, pdc_server_num_g);
+    //return (uint32_t)((obj_id / PDC_SERVER_ID_INTERVEL - 1) % pdc_server_num_g);
 }
 
 /* static int */
@@ -2012,8 +2013,8 @@ perr_t PDC_Client_send_name_recv_id(const char *obj_name, pdcid_t obj_create_pro
     /* printf("Hash(%s) = %d\n", obj_name, in.hash_value); */
 
     // Compute server id
-    server_id       = (hash_name_value + in.data.time_step);
-    server_id      %= pdc_server_num_g;
+    server_id = PDC_get_server_id_by_name_and_timestep(hash_name_value, 
+        in.data.time_step, (uint16_t)pdc_server_num_g);
 
     /* uint32_t base_server_id  = get_server_id_by_hash_name(obj_name); */
 

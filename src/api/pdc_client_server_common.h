@@ -41,13 +41,14 @@
 #include "mercury_hash_table.h"
 #include "mercury_list.h"
 #include "utils/art.h"
-
+#include "utils/timer_utils.h"
 #include "pdc_obj_pkg.h"
 
 #define ADDR_MAX 128
 #define DIM_MAX  4
 #define TAG_LEN_MAX 128
-#define PDC_SERVER_ID_INTERVEL 1000000
+// #define PDC_SERVER_ID_INTERVEL 1000000
+#define PDC_SERVER_ID_INTERVEL 0
 #define PDC_SERVER_MAX_PROC_PER_NODE 64
 #define PDC_SERIALIZE_MAX_SIZE 256
 
@@ -55,7 +56,7 @@
 /* extern char pdc_server_tmp_dir_g[ADDR_MAX]; */
 #define pdc_server_cfg_name_g "server.cfg"
 
-extern uint64_t pdc_id_seq_g;
+extern uint32_t pdc_id_seq_g;
 extern int pdc_server_rank_g;
 
 #define    PDC_LOCK_OP_OBTAIN  0
@@ -1976,6 +1977,7 @@ void pdc_mkdir(const char *dir);
 extern hg_hash_table_t   *metadata_hash_table_g;
 extern hg_atomic_int32_t  close_server_g;
 
+uint32_t PDC_get_server_id_by_name_and_timestep(uint32_t hash_name_value, uint32_t timestep, uint16_t server_count);
 
 hg_id_t data_server_write_check_register(hg_class_t *hg_class);
 hg_id_t data_server_read_register(hg_class_t *hg_class);

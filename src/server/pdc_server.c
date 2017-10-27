@@ -1141,14 +1141,25 @@ void PDC_Server_print_version()
  * Allocate a new object ID
  *
  * \return 64-bit integer of object ID
+ * ID format:  |16bit server_id|16bit millisecond|32bit server-generated seq number|
  */
-static uint64_t PDC_Server_gen_obj_id()
+static uint64_t PDC_Server_gen_obj_id(uint16_t server_id)
 {
     uint64_t ret_value;
 
     FUNC_ENTER(NULL);
 
-    ret_value = pdc_id_seq_g++;
+    pdc_id_seq_g++;
+
+    uint64_t rst = ((uint64_t)server_id) << 48;
+
+    uint64_t millisec = get_current_milliseconds() & 0x0000000000001111;
+    
+    uint64_t base = ((uint64_t)pdc_id_seq_g) & 0x0000000011111111;
+
+    rst = (server_id | (millisec << 32))|base;
+
+    ret_value = rst;
 
     FUNC_LEAVE(ret_value);
 }
@@ -2225,6 +2236,10 @@ perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out)
     total_mem_usage_g += sizeof(uint32_t);
     *hash_key = in->hash_value;
 
+    uint16_t server_id = PDC_get_server_id_by_name_and_timestep(hash_name_value, 
+        in.data.time_step, (uint16_t)pdc_server_num_g);
+    
+
     pdc_hash_table_entry_head *lookup_value;
     pdc_metadata_t *found_identical;
 
@@ -2290,7 +2305,7 @@ perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out)
     }
 
     // Generate object id (uint64_t)
-    metadata->obj_id = PDC_Server_gen_obj_id();
+    metadata->obj_id = PDC_Server_gen_obj_id(server_id);
 
 #ifdef ENABLE_MULTITHREAD
     // ^ Release hash table lock
@@ -2642,7 +2657,8 @@ perr_t PDC_Server_init(int port, hg_class_t **hg_class, hg_context_t **hg_contex
     /* PDC_Server_print_version(); */
 
     // set server id start
-    pdc_id_seq_g = pdc_id_seq_g * (pdc_server_rank_g+1);
+    pdc_id_seq_g = 0;
+    // pdc_id_seq_g = pdc_id_seq_g * (pdc_server_rank_g+1);
 
     // Create server tmp dir
     pdc_mkdir(pdc_server_tmp_dir_g);

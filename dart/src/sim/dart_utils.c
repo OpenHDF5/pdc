@@ -170,14 +170,16 @@ hash(char *str, int len)
     return hash;
 }
 
-float get_comm_time() {
-    int vary = rand()%1000;
-    float rst = net_comm_time_base + ((float)vary)/100000000.0;
-    return rst;
+double get_comm_time() {
+//    double vary = rand()%1000;
+//    double rst = net_comm_time_base + vary/100000000.0;
+//    return rst;
+    return net_comm_time_base+ random_exponential(net_comm_time_base)/100000000.0;
 }
 
-void global_tick(){
-    global_clock += get_comm_time();
+
+void global_tick(double tick) {
+    global_clock+=tick;
 }
 
 char **gen_uuids(int count){

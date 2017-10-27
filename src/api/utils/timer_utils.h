@@ -28,6 +28,12 @@ typedef struct stopwatch_t
 
 } stopwatch_t;
 
+/**
+ * Get current time in microsecond.
+ * 
+ */
+suseconds_t get_ticks();
+
 /** Starts the timer.
  *
  *  @note If called multiple times, restarts the timer.

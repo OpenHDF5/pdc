@@ -7,8 +7,10 @@
 
 typedef struct {
     int id;
-    int word_count;
-    int request_per_sec;
+    uint32_t word_count;
+    uint32_t request_count;
+    uint32_t max_word_count;
+    uint32_t max_request_per_sec;
 } dart_server;
 
 typedef struct {
@@ -19,8 +21,10 @@ typedef struct {
 
 typedef struct {
     int id;
-    int num_vnode;
+    uint32_t num_vnode;
     int dart_tree_height;
+    uint32_t *vnode_key_count;
+    uint32_t vnode_constraint;
     dart_vnode *vnodes;
 } dart_client;
 
@@ -30,6 +34,7 @@ typedef struct {
     int num_client;
     int num_server;
     int alphabet_size;
+    int spanning_factor;
 } DART;
 
 #endif //DART_SIM_H
