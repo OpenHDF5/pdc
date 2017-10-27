@@ -161,7 +161,7 @@ static uint32_t pdc_hash_sdbm(const char *pc)
 
 uint16_t PDC_get_server_id_by_name_and_timestep(uint32_t hash_name_value, uint32_t timestep, uint16_t server_count)
 {
-    return (hash_name_value + time_step) % server_count;
+    return (hash_name_value + timestep) % server_count;
 }
 
 uint32_t PDC_get_hash_by_name(const char *name)
