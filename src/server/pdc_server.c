@@ -2237,7 +2237,7 @@ perr_t insert_metadata_to_hash_table(gen_obj_id_in_t *in, gen_obj_id_out_t *out)
     *hash_key = in->hash_value;
 
     uint16_t server_id = PDC_get_server_id_by_name_and_timestep(hash_key, 
-        in.data.time_step, (uint16_t)pdc_server_size_g);
+        in->data.time_step, (uint16_t)pdc_server_size_g);
     
 
     pdc_hash_table_entry_head *lookup_value;
