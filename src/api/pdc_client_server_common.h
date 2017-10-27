@@ -1977,7 +1977,7 @@ void pdc_mkdir(const char *dir);
 extern hg_hash_table_t   *metadata_hash_table_g;
 extern hg_atomic_int32_t  close_server_g;
 
-uint32_t PDC_get_server_id_by_name_and_timestep(uint32_t hash_name_value, uint32_t timestep, uint16_t server_count);
+uint16_t PDC_get_server_id_by_name_and_timestep(uint32_t hash_name_value, uint32_t timestep, uint16_t server_count);
 
 hg_id_t data_server_write_check_register(hg_class_t *hg_class);
 hg_id_t data_server_read_register(hg_class_t *hg_class);
